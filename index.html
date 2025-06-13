@@ -3,68 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Soluciones empresariales de ManteMoustache para gestión eficiente de negocios">
     <title>ManteMoustache - Soluciones Empresariales</title>
     <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Arial', sans-serif;
+        :root {
+            --primary-color: #1a237e;
+            --secondary-color: #303f9f;
+            --accent-color: #FFD700;
+            --light-bg: #e8eaf6;
+            --text-color: #333;
+            --white: #ffffff;
+        }
+        
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            color: #333;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
             line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
         
         header {
-            background-color: #1a237e;
-            color: white;
-            padding: 1rem 0;
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 1.5rem 0;
             text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         
         nav {
             display: flex;
             justify-content: center;
-            background-color: #303f9f;
+            background-color: var(--secondary-color);
             padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
         
         nav a {
-            color: white;
+            color: var(--white);
             text-decoration: none;
             margin: 0 1.5rem;
             font-weight: bold;
             transition: color 0.3s;
+            padding: 0.5rem;
         }
         
         nav a:hover {
-            color: #FFD700;
+            color: var(--accent-color);
         }
         
         .hero {
-            background-color: #e8eaf6;
+            background-color: var(--light-bg);
             text-align: center;
-            padding: 4rem 1rem;
+            padding: 5rem 1rem;
+            flex: 1;
         }
         
         .hero h2 {
             font-size: 2.5rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
         }
         
         .btn {
             display: inline-block;
-            background-color: #FFD700;
-            color: #1a237e;
-            padding: 0.8rem 1.5rem;
+            background-color: var(--accent-color);
+            color: var(--primary-color);
+            padding: 0.8rem 2rem;
             text-decoration: none;
             border-radius: 4px;
             font-weight: bold;
             margin-top: 1rem;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-size: 1.1rem;
         }
         
         .btn:hover {
-            background-color: #ffc107;
+            background-color: transparent;
+            color: var(--primary-color);
+            border-color: var(--primary-color);
         }
         
         .features {
@@ -74,25 +107,70 @@
             padding: 3rem 1rem;
             max-width: 1200px;
             margin: 0 auto;
+            gap: 2rem;
         }
         
         .feature {
             flex: 1;
             min-width: 300px;
-            margin: 1rem;
-            padding: 1.5rem;
-            background-color: white;
+            padding: 2rem;
+            background-color: var(--white);
             border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
         }
         
         footer {
-            background-color: #1a237e;
-            color: white;
+            background-color: var(--primary-color);
+            color: var(--white);
             text-align: center;
             padding: 2rem 1rem;
-            margin-top: 2rem;
+            margin-top: auto;
+        }
+        
+        footer a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        
+        footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                align-items: center;
+                padding: 0.5rem 0;
+            }
+            
+            nav a {
+                margin: 0.5rem 0;
+            }
+            
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
         }
     </style>
 </head>
@@ -107,34 +185,53 @@
         <a href="#contact">Contacto</a>
     </nav>
     
-    <section class="hero">
-        <h2>Bienvenido a ManteMoustache</h2>
-        <p>La solución ideal para gestionar tu empresa de manera eficiente</p>
-        <a href="tienda.html" class="btn">Ver productos</a>
-    </section>
-    
-    <section id="features" class="features">
-        <div class="feature">
-            <h3>Gestión de Operaciones</h3>
-            <p>Administra órdenes, registros, roles, usuarios y más con nuestra plataforma integral.</p>
-        </div>
+    <main>
+        <section class="hero">
+            <h2>Bienvenido a ManteMoustache</h2>
+            <p>La solución ideal para gestionar tu empresa de manera eficiente</p>
+            <a href="tienda.html" class="btn">Ver productos</a>
+        </section>
         
-        <div class="feature">
-            <h3>Seguridad Avanzada</h3>
-            <p>Control de acceso robusto con licencias de datos y protección de última generación.</p>
-        </div>
-        
-        <div class="feature">
-            <h3>Soporte y Actualizaciones</h3>
-            <p>Acceso prioritario a soporte técnico especializado y actualizaciones periódicas.</p>
-        </div>
-    </section>
+        <section id="features" class="features">
+            <div class="feature">
+                <h3>Gestión de Operaciones</h3>
+                <p>Administra órdenes, registros, roles, usuarios y más con nuestra plataforma integral.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Seguridad Avanzada</h3>
+                <p>Control de acceso robusto con licencias de datos y protección de última generación.</p>
+            </div>
+            
+            <div class="feature">
+                <h3>Soporte y Actualizaciones</h3>
+                <p>Acceso prioritario a soporte técnico especializado y actualizaciones periódicas.</p>
+            </div>
+        </section>
+    </main>
     
     <footer id="contact">
-        <p>Contacto: Pablo Rivero</p>
-        <p>Email: <a href="mailto:mantemoustache@gmail.com" style="color: #FFD700;">mantemoustache@gmail.com</a></p>
-        <p>Teléfono: <a href="tel:+59898153659" style="color: #FFD700;">098 153 659</a></p>
-        <p>&copy; 2023 ManteMoustache. Todos los derechos reservados.</p>
+        <div class="footer-content">
+            <p>Contacto: Pablo Rivero</p>
+            <p>Email: <a href="mailto:mantemoustache@gmail.com">mantemoustache@gmail.com</a></p>
+            <p>Teléfono: <a href="tel:+59898153659">098 153 659</a></p>
+            <p>&copy; <span id="year"></span> ManteMoustache. Todos los derechos reservados.</p>
+        </div>
     </footer>
+
+    <script>
+        // Añade el año actual automáticamente
+        document.getElementById('year').textContent = new Date().getFullYear();
+        
+        // Smooth scrolling para los enlaces de navegación
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
 </body>
 </html>
