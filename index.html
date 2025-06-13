@@ -3,138 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ManteMoustache - Soluciones Empresariales</title>
+    <title>Tienda de Productos de ManteMoustache</title>
+    <link rel="stylesheet" href="styles.css">
     <style>
-        /* Estilos generales */
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #333;
-            line-height: 1.6;
-        }
-        
-        header {
-            background-color: #1a237e;
-            color: white;
-            padding: 1rem 0;
-            text-align: center;
-        }
-        
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: #303f9f;
-            padding: 1rem 0;
-        }
-        
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin: 0 1.5rem;
-            font-weight: bold;
-            transition: color 0.3s;
-        }
-        
-        nav a:hover {
-            color: #FFD700;
-        }
-        
-        .hero {
-            background-color: #e8eaf6;
-            text-align: center;
-            padding: 4rem 1rem;
-        }
-        
-        .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: #FFD700;
-            color: #1a237e;
-            padding: 0.8rem 1.5rem;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-top: 1rem;
-            transition: background-color 0.3s;
-        }
-        
-        .btn:hover {
-            background-color: #ffc107;
-        }
-        
-        .features {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            padding: 3rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .feature {
-            flex: 1;
-            min-width: 300px;
-            margin: 1rem;
-            padding: 1.5rem;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        
+        /* Estilos adicionales para el pie de página */
         footer {
             background-color: #1a237e;
             color: white;
             text-align: center;
-            padding: 2rem 1rem;
-            margin-top: 2rem;
+            padding: 20px;
+            margin-top: 30px;
+            font-family: Arial, sans-serif;
+        }
+        
+        .contacto {
+            margin: 10px 0;
+        }
+        
+        .derechos {
+            font-size: 0.9em;
+            margin-top: 15px;
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>ManteMoustache</h1>
+        <h1>Tienda Digital de ManteMoustache</h1>
+        <p>Descarga tus productos y recibe la licencia al instante</p>
     </header>
-    
-    <nav>
-        <a href="#features">Características</a>
-        <a href="#download">Descarga</a>
-        <a href="#contact">Contacto</a>
-    </nav>
-    
-    <section class="hero">
-        <h2>Bienvenido a ManteMoustache</h2>
-        <p>La solución ideal para gestionar tu empresa de manera eficiente</p>
-        <a href="index.html" class="btn">Ver productos</a>
-    </section>
-    
-    <section id="features" class="features">
-        <div class="feature">
-            <h3>Gestión de Operaciones</h3>
-            <p>Administra órdenes, registros, roles, usuarios y más con nuestra plataforma integral.</p>
+
+    <div class="productos">
+        <!-- Producto 1 -->
+        <div class="producto">
+            <img src="producto1.jpg" alt="Producto 1">
+            <h3>Ebook Marketing Digital</h3>
+            <p>$10 USD</p>
+            <button class="boton-comprar" onclick="comprar('producto1')">Comprar</button>
         </div>
-        
-        <div class="feature">
-            <h3>Seguridad Avanzada</h3>
-            <p>Control de acceso robusto con licencias de datos y protección de última generación.</p>
+
+        <!-- Producto 2 -->
+        <div class="producto">
+            <img src="producto2.jpg" alt="Producto 2">
+            <h3>Plantilla PowerPoint</h3>
+            <p>$8 USD</p>
+            <button class="boton-comprar" onclick="comprar('producto2')">Comprar</button>
         </div>
-        
-        <div class="feature">
-            <h3>Soporte y Actualizaciones</h3>
-            <p>Acceso prioritario a soporte técnico especializado y actualizaciones periódicas.</p>
+    </div>
+
+    <!-- Pie de página -->
+    <footer>
+        <div class="contacto">
+            <p>Contacto: Pablo Rivero</p>
+            <p>Email: <a href="mailto:mantemoustache@gmail.com" style="color: #FFD700;">mantemoustache@gmail.com</a></p>
+            <p>Teléfono: <a href="tel:+59898153659" style="color: #FFD700;">098 153 659</a></p>
         </div>
-    </section>
-    
-    <footer id="contact">
-        <p>Contacto: Pablo Rivero</p>
-        <p>Email: <a href="mailto:mantemoustache@gmail.com" style="color: #FFD700;">mantemoustache@gmail.com</a></p>
-        <p>Teléfono: <a href="tel:+59898153659" style="color: #FFD700;">098 153 659</a></p>
-        <p>&copy; 2023 ManteMoustache. Todos los derechos reservados.</p>
+        <div class="derechos">
+            <p>&copy; 2023 ManteMoustache. Todos los derechos reservados.</p>
+        </div>
     </footer>
+
+    <script src="script.js"></script>
 </body>
 </html>
