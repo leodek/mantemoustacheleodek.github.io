@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Soluciones empresariales de ManteMoustache para gestión eficiente de negocios">
-    <title>ManteMoustache - Soluciones Empresariales</title>
+    <meta name="description" content="Soluciones digitales para gestión industrial - ManteMoustache">
+    <title>ManteMoustache - Soluciones Industriales</title>
     <style>
         :root {
             --primary-color: #1a237e;
@@ -100,35 +100,57 @@
             border-color: var(--primary-color);
         }
         
-        .features {
+        .about {
+            max-width: 1000px;
+            margin: 3rem auto;
+            padding: 0 1rem;
+        }
+        
+        .about-section {
+            margin-bottom: 3rem;
+        }
+        
+        .about h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+        
+        .about h3 {
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+            font-size: 1.5rem;
+        }
+        
+        .about p {
+            margin-bottom: 1rem;
+            line-height: 1.7;
+        }
+        
+        .tools {
             display: flex;
             flex-wrap: wrap;
-            justify-content: center;
-            padding: 3rem 1rem;
-            max-width: 1200px;
-            margin: 0 auto;
             gap: 2rem;
+            margin-top: 2rem;
         }
         
-        .feature {
+        .tool-card {
             flex: 1;
             min-width: 300px;
-            padding: 2rem;
-            background-color: var(--white);
+            background: var(--white);
+            padding: 1.5rem;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            text-align: center;
-            transition: transform 0.3s;
+            border-left: 4px solid var(--accent-color);
         }
         
-        .feature:hover {
-            transform: translateY(-5px);
-        }
-        
-        .feature h3 {
+        .tool-card h4 {
             color: var(--primary-color);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
         
         footer {
@@ -171,6 +193,10 @@
             .hero h2 {
                 font-size: 2rem;
             }
+            
+            .about {
+                padding: 0 1rem;
+            }
         }
     </style>
 </head>
@@ -180,7 +206,7 @@
     </header>
     
     <nav>
-        <a href="#features">Características</a>
+        <a href="#about">Sobre Nosotros</a>
         <a href="#download">Descarga</a>
         <a href="#contact">Contacto</a>
     </nav>
@@ -188,24 +214,40 @@
     <main>
         <section class="hero">
             <h2>Bienvenido a ManteMoustache</h2>
-            <p>La solución ideal para gestionar tu empresa de manera eficiente</p>
+            <p>Soluciones digitales para la gestión industrial eficiente</p>
             <a href="tienda.html" class="btn">Ver productos</a>
         </section>
         
-        <section id="features" class="features">
-            <div class="feature">
-                <h3>Gestión de Operaciones</h3>
-                <p>Administra órdenes, registros, roles, usuarios y más con nuestra plataforma integral.</p>
+        <section id="about" class="about">
+            <h2>Sobre Nosotros</h2>
+            
+            <div class="about-section">
+                <p>ManteMoustache es una empresa joven y dinámica dedicada al desarrollo de soluciones digitales para la gestión industrial.</p>
+                
+                <p>Estamos liderados por Pablo Rivero, Tecnólogo Industrial Mecánico y especialista en mantenimiento industrial, con amplia experiencia en optimizar procesos técnicos y operativos.</p>
             </div>
             
-            <div class="feature">
-                <h3>Seguridad Avanzada</h3>
-                <p>Control de acceso robusto con licencias de datos y protección de última generación.</p>
+            <div class="about-section">
+                <h3>Nuestras Herramientas</h3>
+                <p>Actualmente ofrecemos dos herramientas clave para pequeñas y medianas empresas:</p>
+                
+                <div class="tools">
+                    <div class="tool-card">
+                        <h4>🛠️ Listado de Equipos</h4>
+                        <p>Sistema para registrar, clasificar y seguir el estado de equipos básicos y medianos, con foco en la trazabilidad técnica.</p>
+                    </div>
+                    
+                    <div class="tool-card">
+                        <h4>📦 Listado de Insumos</h4>
+                        <p>Aplicación diseñada para gestionar el inventario de insumos y materiales, con control de stock, movimientos y alertas.</p>
+                    </div>
+                </div>
             </div>
             
-            <div class="feature">
-                <h3>Soporte y Actualizaciones</h3>
-                <p>Acceso prioritario a soporte técnico especializado y actualizaciones periódicas.</p>
+            <div class="about-section">
+                <p>En ManteMoustache creemos en soluciones simples, útiles y enfocadas en la realidad de las empresas que trabajan día a día con recursos limitados pero con grandes desafíos técnicos.</p>
+                
+                <p>Próximamente estaremos ampliando nuestra plataforma con nuevas funcionalidades para una gestión industrial aún más completa.</p>
             </div>
         </section>
     </main>
