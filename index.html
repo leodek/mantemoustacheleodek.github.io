@@ -30,13 +30,25 @@
             min-height: 100vh;
         }
         
+        /* --- CABECERA CON LOGO (MODIFICADO) --- */
         header {
             background-color: var(--primary-color);
-            color: var(--white);
             padding: 1.5rem 0;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
+        .header-logo {
+            height: 80px; /* Altura del logo - Ajustar según necesidad */
+            width: auto;
+            max-width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .header-logo:hover {
+            transform: scale(1.05); /* Efecto sutil al pasar el mouse */
+        }
+        /* -------------------------------------- */
         
         nav {
             display: flex;
@@ -193,6 +205,11 @@
             .hero h2 {
                 font-size: 2rem;
             }
+
+            /* Ajuste responsive para el logo */
+            .header-logo {
+                height: 60px;
+            }
             
             .about {
                 padding: 0 1rem;
@@ -201,8 +218,15 @@
     </style>
 </head>
 <body>
+    <!-- ENCABEZADO ACTUALIZADO CON LOGO -->
     <header>
-        <h1>ManteMoustache</h1>
+        <!-- 
+            REEMPLAZA "images/logo-mante.png" CON LA RUTA CORRECTA DE TU LOGO 
+            EJEMPLOS:
+            - Si subiste el logo a GitHub: "images/logo-mante.png"
+            - Si usas un enlace externo: "https://ejemplo.com/logo.png"
+        -->
+        <img src="images/logo-mante.png" alt="ManteMoustache - Soluciones Industriales" class="header-logo">
     </header>
     
     <nav>
