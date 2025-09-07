@@ -7,22 +7,22 @@
 
   <title>ManteMoustache — Soluciones Industriales y Mantenimiento</title>
   <meta name="description" content="ManteMoustache: soluciones digitales para gestión industrial, equipos, OTs/OPs e insumos." />
-  <link rel="canonical" href="https://www.mantemoustache.com/" />
+  <link rel="canonical" href="https://www.mantemoustacheleodek.github.io/" />
 
   <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="ManteMoustache — Soluciones Industriales" />
   <meta property="og:description" content="Gestión de equipos, OTs/OPs e insumos para industria." />
-  <meta property="og:url" content="https://www.mantemoustache.com/" />
+  <meta property="og:url" content="https://mantemoustacheleodek.github.io/" />
   <meta property="og:site_name" content="ManteMoustache" />
-  <meta property="og:image" content="https://www.mantemoustache.com/images/splash.png" />
+  <meta property="og:image" content="https://mantemoustacheleodek.github.io/images/splash.png" />
   <meta property="og:locale" content="es_UY" />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="ManteMoustache — Soluciones Industriales" />
   <meta name="twitter:description" content="Gestión de equipos, OTs/OPs e insumos para industria." />
-  <meta name="twitter:image" content="https://www.mantemoustache.com/images/splash.png" />
+  <meta name="twitter:image" content="https://mantemoustacheleodek.github.io/images/splash.png" />
 
   <link rel="icon" href="/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -125,7 +125,7 @@
       box-shadow:0 16px 40px -20px var(--shadow), 0 0 0 6px var(--ring);
       backdrop-filter:saturate(130%) blur(2px);
       max-width:640px; width:100%;
-      overflow:hidden;             /* importante para el fade */
+      overflow:hidden;
     }
 
     /* Doble capa para crossfade */
@@ -187,25 +187,6 @@
       .cards{ grid-template-columns:1fr; }
     }
   </style>
-
-  <!-- JSON-LD Organization -->
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"Organization",
-    "name":"ManteMoustache",
-    "url":"https://www.mantemoustache.com/",
-    "logo":"https://www.mantemoustache.com/images/splash.png",
-    "contactPoint":[{
-      "@type":"ContactPoint",
-      "email":"mantemoustache@gmail.com",
-      "telephone":"+59898153659",
-      "contactType":"customer support",
-      "areaServed":"UY"
-    }],
-    "sameAs":["https://github.com/leodek"]
-  }
-  </script>
 </head>
 <body>
   <!-- Header con logo que vuelve a inicio -->
@@ -223,7 +204,7 @@
     </div>
   </header>
 
-  <!-- Hero split con carrusel de imágenes (2ª columna) -->
+  <!-- Hero split con carrusel de imágenes -->
   <section class="hero">
     <div class="hero-grid">
       <div>
@@ -239,7 +220,6 @@
 
       <div class="hero-illu">
         <div class="frame">
-          <!-- Stack para crossfade -->
           <div class="slide-stack" id="heroStack">
             <div class="slide active"><img alt="Ilustración de plataforma industrial y mantenimiento" /></div>
             <div class="slide"><img alt="Ilustración de plataforma industrial y mantenimiento" /></div>
@@ -294,6 +274,7 @@
     </div>
   </footer>
 
+  <!-- ===== Scripts ===== -->
   <script>
     // Año actual
     document.getElementById('year').textContent = new Date().getFullYear();
@@ -308,26 +289,23 @@
       });
     });
 
-    // ========= Carrusel desde carpeta de GitHub =========
-    // CONFIGURACIÓN: actualizá estos valores
-    const GITHUB_USER   = "leodek";            // ← tu usuario
-    const GITHUB_REPO   = "leodek.github.io";  // ← repo donde está tu web
-    const GITHUB_PATH   = "images/hero";       // ← carpeta con las imágenes
-    const GITHUB_BRANCH = "main";              // ← "main" o "gh-pages"
-    const INTERVAL_MS   = 5000;                // 5s por pedido :)
+    // Registrar Service Worker para cachear imágenes
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(console.warn);
+    }
 
-    // Extensiones válidas
+    // ========= Carrusel desde carpeta /images/hero/ =========
+    const INTERVAL_MS   = 5000; // 5s
     const IMG_EXT = /\.(png|jpe?g|webp|svg)$/i;
 
-    // DOM
-    const stack = document.getElementById('heroStack');
+    const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
-    const imgA = slides[0].querySelector('img');
-    const imgB = slides[1].querySelector('img');
+    const imgA   = slides[0].querySelector('img');
+    const imgB   = slides[1].querySelector('img');
 
-    let urls = [];     // URLs finales de descarga
-    let idx  = 0;      // índice actual
-    let useA = true;   // toggle A/B para crossfade
+    let urls = [];   // URLs finales /images/hero/xxx.png
+    let idx  = 0;
+    let useA = true;
     let timer = null;
 
     function preload(src){
@@ -339,45 +317,42 @@
       });
     }
 
-    async function fetchGitHubFolder(user, repo, path, branch="main"){
-      const api = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`;
+    // Cargar automáticamente todos los archivos de la carpeta hero
+    async function fetchImagesFromHero(){
+      const api = `https://api.github.com/repos/mantemoustacheleodek/mantemoustacheleodek.github.io/contents/images/hero?ref=main`;
       const r = await fetch(api, { headers: { "Accept":"application/vnd.github+json" } });
       if(!r.ok) throw new Error("GitHub API error " + r.status);
       const list = await r.json();
       return list
         .filter(item => item.type === "file" && IMG_EXT.test(item.name))
-        .map(item => item.download_url);
+        .map(item => `/images/hero/${item.name}`);
     }
 
     async function initCarousel(){
       try{
-        urls = await fetchGitHubFolder(GITHUB_USER, GITHUB_REPO, GITHUB_PATH, GITHUB_BRANCH);
+        urls = await fetchImagesFromHero();
       }catch(err){
         console.warn("No se pudo listar la carpeta del repo. Usando fallback local.", err);
-        // Fallback: editá esta lista si querés un respaldo local
         urls = [
-          "images/hero/1.png",
-          "images/hero/2.png",
-          "images/hero/3.png"
+          "/images/hero/1.png",
+          "/images/hero/2.png",
+          "/images/hero/3.png"
         ];
       }
+
       if(!urls.length){
-        console.warn("No hay imágenes en la carpeta del repo:", GITHUB_PATH);
+        console.warn("No hay imágenes en: /images/hero/");
         return;
       }
 
-      // Orden estable y preload inicial
       urls.sort();
-      try { await preload(urls[0]); } catch(e){}
 
-      // Arranque con primera imagen
+      try { await preload(urls[0]); } catch(e){}
       imgA.src = urls[0];
       slides[0].classList.add('active');
 
-      // Preload siguiente
       if(urls[1]) preload(urls[1]).catch(()=>{});
 
-      // Intervalo de rotación
       idx = 1;
       timer = setInterval(nextSlide, INTERVAL_MS);
     }
@@ -386,9 +361,8 @@
       if(!urls.length) return;
 
       const nextUrl = urls[idx % urls.length];
-      try { await preload(nextUrl); } catch(e){ /* seguimos igual si falla */ }
+      try { await preload(nextUrl); } catch(e){}
 
-      // Crossfade entre A y B
       if(useA){
         imgB.src = nextUrl;
         slides[1].classList.add('active');
@@ -401,12 +375,10 @@
       useA = !useA;
       idx++;
 
-      // Pre-cargar la próxima
       const ahead = urls[idx % urls.length];
       preload(ahead).catch(()=>{});
     }
 
-    // Iniciar
     initCarousel();
   </script>
 </body>
