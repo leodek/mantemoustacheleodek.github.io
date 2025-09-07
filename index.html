@@ -163,27 +163,28 @@
   </footer>
 
   <script>
-    // Año actual y smooth scroll
+    // Año actual
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const el = document.querySelector(a.getAttribute('href'));
-        if(!el) return; e.preventDefault();
+        if(!el) return;
+        e.preventDefault();
         el.scrollIntoView({behavior:'smooth'});
       });
     });
 
-    // ===== Carrusel sin API: busca imágenes en /fotos =====
+    // ===== Carrusel: carga SOLO la imagen 01.jpg =====
     const INTERVAL_MS = 5000;
-    const EXT = ["png","jpg","jpeg","webp","svg"];  // extensiones válidas
-    const MAX_NUM = 50;                              // hasta 50 archivos numerados
 
     const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
     const imgA   = slides[0].querySelector('img');
     const imgB   = slides[1].querySelector('img');
 
-    let urls = [];
+    let urls = ["/fotos/01.jpg"]; // imagen forzada
     let idx  = 0;
     let useA = true;
 
@@ -196,58 +197,16 @@
       });
     }
 
-    // 1) Lista manual opcional (si querés control total, descomentá y edita):
-    // const MANUAL = ["/fotos/01.png","/fotos/maquinaria.webp","/fotos/planta.jpg"];
-
-    // 2) Auto-descubrimiento: prueba /fotos/01..50 con varias extensiones y se queda con las que existen
-    async function discoverByProbing(){
-      const candidates = [];
-      for(let n=1; n<=MAX_NUM; n++){
-        const base = String(n).padStart(2,"0");
-        for(const ext of EXT){
-          candidates.push(`/fotos/${base}.${ext}`);
-        }
-      }
-      // también prueba archivos no numerados comunes (opcional)
-      const common = ["hero","portada","planta","equipo","maquinaria","industrial"];
-      for(const name of common){
-        for(const ext of EXT){
-          candidates.push(`/fotos/${name}.${ext}`);
-        }
-      }
-
-      // Filtra por las que realmente existen (onload)
-      const found = [];
-      await Promise.allSettled(candidates.map(src => preload(src).then(()=>found.push(src))));
-      // Elimina duplicados y ordena
-      return Array.from(new Set(found)).sort();
-    }
-
     async function initCarousel(){
-      try{
-        // urls = MANUAL && MANUAL.length ? MANUAL : await discoverByProbing();
-        urls = await discoverByProbing();
-      }catch(e){
-        console.warn("No se pudo descubrir imágenes:", e);
-        urls = [];
-      }
+      if(!urls.length) return;
 
-      if(!urls.length){
-        console.warn("No se encontraron imágenes en /fotos. Subí al menos /fotos/01.png");
-        return;
-      }
-
-      // Primera imagen
       try { await preload(urls[0]); } catch(e){}
       imgA.src = urls[0];
       slides[0].classList.add('active');
 
-      // Preload siguiente
-      if(urls[1]) preload(urls[1]).catch(()=>{});
-
       idx = 1;
       setInterval(nextSlide, INTERVAL_MS);
-      console.log("[Carrusel] Imágenes detectadas:", urls);
+      console.log("[Carrusel] Imágenes cargadas:", urls);
     }
 
     async function nextSlide(){
@@ -260,14 +219,12 @@
         imgA.src = nextUrl; slides[0].classList.add('active'); slides[1].classList.remove('active');
       }
       useA = !useA; idx++;
-      const ahead = urls[idx % urls.length]; preload(ahead).catch(()=>{});
     }
 
     initCarousel();
 
-    // Si usás un SW para cache, no hace falta tocarlo; el carrusel usa rutas del mismo origen (/fotos/…)
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(()=>{});
+      navigator.serviceWorker.register('/sw.js').catch(console.warn);
     }
   </script>
 </body>
