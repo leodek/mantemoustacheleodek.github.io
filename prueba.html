@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<meta charset="utf-8">
+<title>Prueba /fotos/01.jpg</title>
+<style>
+  body{margin:0;background:#0A192F;color:#E6F1FF;font-family:system-ui,Arial}
+  .wrap{max-width:900px;margin:40px auto;padding:0 16px}
+  .box{background:#0F1E3A;border:1px solid #132547;border-radius:12px;padding:16px}
+  img{max-width:100%;border-radius:10px}
+  code{background:#08152b;padding:2px 6px;border-radius:6px}
+</style>
+<div class="wrap">
+  <h1>Test directo de imagen</h1>
+  <p>Intentando cargar: <code id="url"></code></p>
+  <div class="box">
+    <img id="pic" alt="Prueba /fotos/01.jpg">
+  </div>
+  <p id="status"></p>
+</div>
+<script>
+  const SRC = "/fotos/01.jpg?cb=" + Date.now();  // evita caché
+  document.getElementById('url').textContent = SRC;
+  const img = document.getElementById('pic');
+  const status = document.getElementById('status');
+
+  img.onload = () => status.textContent = "✅ Cargó bien ("+ img.naturalWidth +"×"+ img.naturalHeight +")";
+  img.onerror = () => status.textContent = "❌ No se pudo cargar la imagen desde " + location.origin + SRC;
+  img.src = SRC;
+
+  // Además probamos con fetch para ver el status
+  fetch(SRC, {cache:"no-store"})
+    .then(r => status.textContent += " | fetch status: " + r.status)
+    .catch(e => status.textContent += " | fetch error: " + e);
+</script>
