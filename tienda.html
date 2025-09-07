@@ -1,67 +1,162 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tienda de Productos de ManteMoustache</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        /* Estilos adicionales para el pie de página */
-        footer {
-            background-color: #1a237e;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            margin-top: 30px;
-            font-family: Arial, sans-serif;
-        }
-        
-        .contacto {
-            margin: 10px 0;
-        }
-        
-        .derechos {
-            font-size: 0.9em;
-            margin-top: 15px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tienda de Productos de ManteMoustache</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Estilos básicos de la tienda (pueden convivir con styles.css) */
+    body { font-family: Arial, sans-serif; }
+    header { text-align:center; padding:28px 16px; }
+    header h1 { margin:0 0 8px; }
+    header p { color:#555; margin:0; }
+
+    .productos {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(240px, 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 900px){ .productos { grid-template-columns: repeat(2, 1fr);} }
+    @media (max-width: 600px){ .productos { grid-template-columns: 1fr;} }
+
+    .producto {
+      background: #fff;
+      border: 1px solid #e8e8e8;
+      border-radius: 12px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .producto img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    .producto .info {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      flex: 1;
+    }
+    .producto h3 { margin: 0; font-size: 1.05rem; }
+    .producto p.desc { margin: 0; color: #666; font-size: 0.95rem; line-height: 1.45; }
+    .precio { font-weight: bold; margin-top: 4px; }
+
+    .boton-comprar {
+      margin: 14px 16px 16px;
+      padding: 10px 14px;
+      border: none;
+      border-radius: 8px;
+      background: #1a237e;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .05s ease, opacity .2s ease;
+    }
+    .boton-comprar:hover { opacity: .95; }
+    .boton-comprar:active { transform: scale(.98); }
+
+    /* Footer (tu estilo original) */
+    footer {
+      background-color: #1a237e;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 30px;
+      font-family: Arial, sans-serif;
+    }
+    .contacto { margin: 10px 0; }
+    .contacto a { color:#FFD700; text-decoration:none; }
+    .contacto a:hover { text-decoration:underline; }
+    .derechos { font-size: 0.9em; margin-top: 15px; }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Tienda Digital de ManteMoustache</h1>
-        <p>Descarga tus productos y recibe la licencia al instante</p>
-    </header>
+  <header>
+    <h1>Tienda Digital de ManteMoustache</h1>
+    <p>Descargá tus productos y recibí la licencia al instante</p>
+  </header>
 
-    <div class="productos">
-        <!-- Producto 1 -->
-        <div class="producto">
-            <img src="producto1.jpg" alt="Producto 1">
-            <h3>Ebook Marketing Digital</h3>
-            <p>$10 USD</p>
-            <button class="boton-comprar" onclick="comprar('producto1')">Comprar</button>
-        </div>
-
-        <!-- Producto 2 -->
-        <div class="producto">
-            <img src="producto2.jpg" alt="Producto 2">
-            <h3>Plantilla PowerPoint</h3>
-            <p>$8 USD</p>
-            <button class="boton-comprar" onclick="comprar('producto2')">Comprar</button>
-        </div>
+  <div class="productos">
+    <!-- Producto 1: Gestión de Equipos -->
+    <div class="producto">
+      <img src="equipos.jpg" alt="Gestión de Equipos" />
+      <div class="info">
+        <h3>Gestión de Equipos</h3>
+        <p class="desc">Inventario, trazabilidad técnica e historial por equipo. Fotos, documentos y estado en tiempo real.</p>
+        <div class="precio">USD 19</div>
+      </div>
+      <button class="boton-comprar" onclick="comprar('Gestion de Equipos', 19)">Comprar</button>
     </div>
 
-    <!-- Pie de página -->
-    <footer>
-        <div class="contacto">
-            <p>Contacto: Pablo Rivero</p>
-            <p>Email: <a href="mailto:mantemoustache@gmail.com" style="color: #FFD700;">mantemoustache@gmail.com</a></p>
-            <p>Teléfono: <a href="tel:+59898153659" style="color: #FFD700;">098 153 659</a></p>
-        </div>
-        <div class="derechos">
-            <p>&copy; 2023 ManteMoustache. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+    <!-- Producto 2: Gestión de Insumos -->
+    <div class="producto">
+      <img src="insumos.jpg" alt="Gestión de Insumos" />
+      <div class="info">
+        <h3>Gestión de Insumos</h3>
+        <p class="desc">Stock, movimientos y alertas de mínimos. Controlá consumos y reposiciones por área y responsable.</p>
+        <div class="precio">USD 19</div>
+      </div>
+      <button class="boton-comprar" onclick="comprar('Gestion de Insumos', 19)">Comprar</button>
+    </div>
 
-    <script src="script.js"></script>
+    <!-- Producto 3: Gestión de Mantenimiento -->
+    <div class="producto">
+      <img src="mantenimiento.jpg" alt="Gestión de Mantenimiento" />
+      <div class="info">
+        <h3>Gestión de Mantenimiento</h3>
+        <p class="desc">OTs preventivas y correctivas, calendario, priorización y seguimiento. Indicadores para mejorar tu operación.</p>
+        <div class="precio">USD 29</div>
+      </div>
+      <button class="boton-comprar" onclick="comprar('Gestion de Mantenimiento', 29)">Comprar</button>
+    </div>
+  </div>
+
+  <!-- Pie de página -->
+  <footer>
+    <div class="contacto">
+      <p>Contacto: Pablo Rivero</p>
+      <p>Email: <a href="mailto:mantemoustache@gmail.com">mantemoustache@gmail.com</a></p>
+      <p>Teléfono: <a href="tel:+59898153659">098 153 659</a></p>
+    </div>
+    <div class="derechos">
+      <p>&copy; <span id="year"></span> ManteMoustache. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- Si tenés un script.js propio lo podés seguir usando.
+       Este bloque define 'comprar' como fallback para abrir un mail prellenado. -->
+  <script>
+    // Año dinámico
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Fallback de compra por email (si no existe comprar() en script.js)
+    if (typeof comprar !== 'function') {
+      window.comprar = function(nombre, precio){
+        const subject = encodeURIComponent(`Compra: ${nombre}`);
+        const body = encodeURIComponent(
+          `Hola, quiero adquirir:\n\n` +
+          `Producto: ${nombre}\n` +
+          `Precio: USD ${precio}\n\n` +
+          `Mi nombre:\n` +
+          `Mi empresa:\n` +
+          `RUT/CI:\n` +
+          `Forma de pago:\n\n` +
+          `Gracias.`
+        );
+        window.location.href = `mailto:mantemoustache@gmail.com?subject=${subject}&body=${body}`;
+      };
+    }
+  </script>
+
+  <!-- Tu script externo (si lo usás) -->
+  <script src="script.js"></script>
 </body>
 </html>
