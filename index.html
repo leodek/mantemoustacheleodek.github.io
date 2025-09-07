@@ -1,303 +1,166 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Soluciones digitales para gestión industrial - ManteMoustache">
-    <title>ManteMoustache - Soluciones Industriales</title>
-    <style>
-        :root {
-            --primary-color: #1a237e;
-            --secondary-color: #303f9f;
-            --accent-color: #FFD700;
-            --light-bg: #e8eaf6;
-            --text-color: #333;
-            --white: #ffffff;
-        }
-        
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
-        body {
-            font-family: 'Arial', sans-serif;
-            color: var(--text-color);
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-        
-        /* --- CABECERA CON LOGO (MODIFICADO) --- */
-        header {
-            background-color: var(--primary-color);
-            padding: 1.5rem 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="index, follow" />
 
-        .header-logo {
-            height: 80px; /* Altura del logo - Ajustar según necesidad */
-            width: auto;
-            max-width: 100%;
-            transition: all 0.3s ease;
-        }
+  <title>ManteMoustache — Soluciones Industriales y Mantenimiento</title>
+  <meta name="description" content="ManteMoustache: soluciones digitales para gestión industrial, equipos, OTs/OPs e insumos." />
+  <link rel="canonical" href="https://www.mantemoustache.com/" />
 
-        .header-logo:hover {
-            transform: scale(1.05); /* Efecto sutil al pasar el mouse */
-        }
-        /* -------------------------------------- */
-        
-        nav {
-            display: flex;
-            justify-content: center;
-            background-color: var(--secondary-color);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-        
-        nav a {
-            color: var(--white);
-            text-decoration: none;
-            margin: 0 1.5rem;
-            font-weight: bold;
-            transition: color 0.3s;
-            padding: 0.5rem;
-        }
-        
-        nav a:hover {
-            color: var(--accent-color);
-        }
-        
-        .hero {
-            background-color: var(--light-bg);
-            text-align: center;
-            padding: 5rem 1rem;
-            flex: 1;
-        }
-        
-        .hero h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
-            color: var(--primary-color);
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            max-width: 800px;
-            margin: 0 auto 2rem;
-        }
-        
-        .btn {
-            display: inline-block;
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-            padding: 0.8rem 2rem;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            margin-top: 1rem;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-            font-size: 1.1rem;
-        }
-        
-        .btn:hover {
-            background-color: transparent;
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-        }
-        
-        .about {
-            max-width: 1000px;
-            margin: 3rem auto;
-            padding: 0 1rem;
-        }
-        
-        .about-section {
-            margin-bottom: 3rem;
-        }
-        
-        .about h2 {
-            color: var(--primary-color);
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 2rem;
-        }
-        
-        .about h3 {
-            color: var(--secondary-color);
-            margin: 1.5rem 0 1rem;
-            font-size: 1.5rem;
-        }
-        
-        .about p {
-            margin-bottom: 1rem;
-            line-height: 1.7;
-        }
-        
-        .tools {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .tool-card {
-            flex: 1;
-            min-width: 300px;
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-left: 4px solid var(--accent-color);
-        }
-        
-        .tool-card h4 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        footer {
-            background-color: var(--primary-color);
-            color: var(--white);
-            text-align: center;
-            padding: 2rem 1rem;
-            margin-top: auto;
-        }
-        
-        footer a {
-            color: var(--accent-color);
-            text-decoration: none;
-        }
-        
-        footer a:hover {
-            text-decoration: underline;
-        }
-        
-        .footer-content {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                align-items: center;
-                padding: 0.5rem 0;
-            }
-            
-            nav a {
-                margin: 0.5rem 0;
-            }
-            
-            .hero {
-                padding: 3rem 1rem;
-            }
-            
-            .hero h2 {
-                font-size: 2rem;
-            }
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="ManteMoustache — Soluciones Industriales" />
+  <meta property="og:description" content="Gestión de equipos, OTs/OPs e insumos para industria." />
+  <meta property="og:url" content="https://www.mantemoustache.com/" />
+  <meta property="og:site_name" content="ManteMoustache" />
+  <meta property="og:image" content="https://www.mantemoustache.com/images/splash.png" />
+  <meta property="og:locale" content="es_UY" />
 
-            /* Ajuste responsive para el logo */
-            .header-logo {
-                height: 60px;
-            }
-            
-            .about {
-                padding: 0 1rem;
-            }
-        }
-    </style>
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ManteMoustache — Soluciones Industriales" />
+  <meta name="twitter:description" content="Gestión de equipos, OTs/OPs e insumos para industria." />
+  <meta name="twitter:image" content="https://www.mantemoustache.com/images/splash.png" />
+
+  <!-- Favicon (opcional) -->
+  <link rel="icon" href="/favicon.ico" />
+
+  <style>
+    :root{--primary-color:#1a237e;--secondary-color:#303f9f;--accent-color:#FFD700;--light-bg:#e8eaf6;--text-color:#333;--white:#fff}
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,sans-serif;color:var(--text-color);line-height:1.6;display:flex;flex-direction:column;min-height:100vh}
+    header{background:var(--primary-color);padding:1.5rem 0;text-align:center;box-shadow:0 2px 5px rgba(0,0,0,.1)}
+    .header-logo{height:80px;width:auto;max-width:100%;transition:transform .3s}
+    .header-logo:hover{transform:scale(1.05)}
+    nav[role="navigation"]{display:flex;justify-content:center;background:var(--secondary-color);padding:1rem 0;position:sticky;top:0;z-index:100}
+    nav a{color:var(--white);text-decoration:none;margin:0 1.5rem;font-weight:bold;transition:color .3s;padding:.5rem}
+    nav a:hover{color:var(--accent-color)}
+    .hero{background:var(--light-bg);text-align:center;padding:5rem 1rem;flex:1}
+    .hero h1{font-size:2.5rem;margin-bottom:1.5rem;color:var(--primary-color)}
+    .hero p{font-size:1.2rem;max-width:800px;margin:0 auto 2rem}
+    .btn{display:inline-block;background:var(--accent-color);color:var(--primary-color);padding:.8rem 2rem;text-decoration:none;border-radius:4px;font-weight:bold;margin-top:1rem;transition:all .3s;border:2px solid transparent;font-size:1.1rem}
+    .btn:hover{background:transparent;color:var(--primary-color);border-color:var(--primary-color)}
+    .about{max-width:1000px;margin:3rem auto;padding:0 1rem}
+    .about-section{margin-bottom:3rem}
+    .about h2{color:var(--primary-color);text-align:center;margin-bottom:2rem;font-size:2rem}
+    .about h3{color:var(--secondary-color);margin:1.5rem 0 1rem;font-size:1.5rem}
+    .about p{margin-bottom:1rem;line-height:1.7}
+    .tools{display:flex;flex-wrap:wrap;gap:2rem;margin-top:2rem}
+    .tool-card{flex:1;min-width:300px;background:var(--white);padding:1.5rem;border-radius:8px;box-shadow:0 2px 10px rgba(0,0,0,.1);border-left:4px solid var(--accent-color)}
+    .tool-card h4{color:var(--primary-color);margin-bottom:.5rem;display:flex;align-items:center;gap:.5rem}
+    footer{background:var(--primary-color);color:var(--white);text-align:center;padding:2rem 1rem;margin-top:auto}
+    footer a{color:var(--accent-color);text-decoration:none}
+    footer a:hover{text-decoration:underline}
+    .footer-content{max-width:800px;margin:0 auto}
+    @media (max-width:768px){
+      nav{flex-direction:column;align-items:center;padding:.5rem 0}
+      nav a{margin:.5rem 0}
+      .hero{padding:3rem 1rem}
+      .hero h1{font-size:2rem}
+      .header-logo{height:60px}
+      .about{padding:0 1rem}
+    }
+  </style>
+
+  <!-- JSON-LD Organization -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"ManteMoustache",
+    "url":"https://www.mantemoustache.com/",
+    "logo":"https://www.mantemoustache.com/images/splash.png",
+    "contactPoint":[{
+      "@type":"ContactPoint",
+      "email":"mantemoustache@gmail.com",
+      "telephone":"+59898153659",
+      "contactType":"customer support",
+      "areaServed":"UY"
+    }],
+    "sameAs":["https://github.com/leodek"]
+  }
+  </script>
 </head>
 <body>
-    <!-- ENCABEZADO ACTUALIZADO CON LOGO -->
-    <header>
-        <!-- 
-            REEMPLAZA "images/logo-mante.png" CON LA RUTA CORRECTA DE TU LOGO 
-            EJEMPLOS:
-            - Si subiste el logo a GitHub: "images/logo-mante.png"
-            - Si usas un enlace externo: "https://ejemplo.com/logo.png"
-        -->
-        <img src="images/splash.png" alt="ManteMoustache - Soluciones Industriales" class="header-logo">
-    </header>
-    
-    <nav>
-        <a href="#about">Sobre Nosotros</a>
-        <a href="#download">Descarga</a>
-        <a href="#contact">Contacto</a>
-    </nav>
-    
-    <main>
-        <section class="hero">
-            <h2>Bienvenido a ManteMoustache</h2>
-            <p>Soluciones digitales para la gestión industrial eficiente</p>
-            <a href="tienda.html" class="btn">Ver productos</a>
-        </section>
-        
-        <section id="about" class="about">
-            <h2>Sobre Nosotros</h2>
-            
-            <div class="about-section">
-                <p>ManteMoustache es una empresa joven y dinámica dedicada al desarrollo de soluciones digitales para la gestión industrial.</p>
-                
-                <p>Estamos liderados por Pablo Rivero, Tecnólogo Industrial Mecánico y especialista en mantenimiento industrial, con amplia experiencia en optimizar procesos técnicos y operativos.</p>
-            </div>
-            
-            <div class="about-section">
-                <h3>Nuestras Herramientas</h3>
-                <p>Actualmente ofrecemos dos herramientas clave para pequeñas y medianas empresas:</p>
-                
-                <div class="tools">
-                    <div class="tool-card">
-                        <h4>🛠️ Listado de Equipos</h4>
-                        <p>Sistema para registrar, clasificar y seguir el estado de equipos básicos y medianos, con foco en la trazabilidad técnica.</p>
-                    </div>
-                    
-                    <div class="tool-card">
-                        <h4>📦 Listado de Insumos</h4>
-                        <p>Aplicación diseñada para gestionar el inventario de insumos y materiales, con control de stock, movimientos y alertas.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="about-section">
-                <p>En ManteMoustache creemos en soluciones simples, útiles y enfocadas en la realidad de las empresas que trabajan día a día con recursos limitados pero con grandes desafíos técnicos.</p>
-                
-                <p>Próximamente estaremos ampliando nuestra plataforma con nuevas funcionalidades para una gestión industrial aún más completa.</p>
-            </div>
-        </section>
-    </main>
-    
-    <footer id="contact">
-        <div class="footer-content">
-            <p>Contacto: Pablo Rivero</p>
-            <p>Email: <a href="mailto:mantemoustache@gmail.com">mantemoustache@gmail.com</a></p>
-            <p>Teléfono: <a href="tel:+59898153659">098 153 659</a></p>
-            <p>&copy; <span id="year"></span> ManteMoustache. Todos los derechos reservados.</p>
-        </div>
-    </footer>
+  <!-- Encabezado con logo -->
+  <header>
+    <img src="images/splash.png" alt="ManteMoustache — Soluciones Industriales" class="header-logo" />
+  </header>
 
-    <script>
-        // Añade el año actual automáticamente
-        document.getElementById('year').textContent = new Date().getFullYear();
-        
-        // Smooth scrolling para los enlaces de navegación
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
+  <nav role="navigation" aria-label="Principal">
+    <a href="#about">Sobre Nosotros</a>
+    <a href="#download">Descarga</a>
+    <a href="#contact">Contacto</a>
+  </nav>
+
+  <main>
+    <section class="hero">
+      <h1>ManteMoustache</h1>
+      <p>Soluciones digitales para la gestión industrial eficiente.</p>
+      <a href="tienda.html" class="btn">Ver productos</a>
+    </section>
+
+    <section id="about" class="about">
+      <h2>Sobre Nosotros</h2>
+
+      <div class="about-section">
+        <p>ManteMoustache es una empresa joven y dinámica dedicada al desarrollo de soluciones digitales para la gestión industrial.</p>
+        <p>Estamos liderados por Pablo Rivero, Tecnólogo Industrial Mecánico, con amplia experiencia optimizando procesos técnicos y operativos.</p>
+      </div>
+
+      <div class="about-section">
+        <h3>Nuestras Herramientas</h3>
+        <p>Actualmente ofrecemos dos herramientas clave para pequeñas y medianas empresas:</p>
+
+        <div class="tools">
+          <div class="tool-card">
+            <h4>🛠️ Listado de Equipos</h4>
+            <p>Registro, clasificación y seguimiento del estado de equipos con foco en trazabilidad técnica.</p>
+          </div>
+
+          <div class="tool-card">
+            <h4>📦 Listado de Insumos</h4>
+            <p>Gestión de inventario de insumos y materiales, con control de stock, movimientos y alertas.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="about-section">
+        <p>Próximamente ampliaremos la plataforma con nuevas funciones para una gestión industrial aún más completa.</p>
+      </div>
+    </section>
+
+    <!-- Nueva sección para coincidir con el menú -->
+    <section id="download" class="about">
+      <h2>Descarga</h2>
+      <p>Muy pronto publicaremos instaladores y documentación. Si querés enterarte primero, escribinos a <a href="mailto:mantemoustache@gmail.com">mantemoustache@gmail.com</a>.</p>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <div class="footer-content">
+      <p>Contacto: Pablo Rivero</p>
+      <p>Email: <a href="mailto:mantemoustache@gmail.com">mantemoustache@gmail.com</a></p>
+      <p>Teléfono: <a href="tel:+59898153659">+598 981 536 59</a></p>
+      <p>&copy; <span id="year"></span> ManteMoustache. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Año actual
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const el = document.querySelector(a.getAttribute('href'));
+        if (!el) return;
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+  </script>
 </body>
 </html>
