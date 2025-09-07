@@ -184,7 +184,7 @@
       });
     });
 
-    // ===== Carrusel desde carpeta /Imágenes/hero (rama maestro) =====
+    // ===== Carrusel: carga desde /fotos (rama maestro) =====
     const INTERVAL_MS = 5000;
     const IMG_EXT = /\.(png|jpe?g|webp|svg)$/i;
 
@@ -197,25 +197,44 @@
     let idx  = 0;
     let useA = true;
 
-    function preload(src){ return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(src); i.onerror=rej; i.src=src; }); }
+    function preload(src){
+      return new Promise((resolve, reject)=>{
+        const i = new Image();
+        i.onload = ()=>resolve(src);
+        i.onerror = reject;
+        i.src = src;
+      });
+    }
+
+    // codifica segmentos para la API (sin romper '/')
+    function encodePath(path){
+      return path.split('/').map(seg => encodeURIComponent(seg)).join('/');
+    }
+
+    async function listFromGitHub(path, branch){
+      const api = `https://api.github.com/repos/mantemoustacheleodek/mantemoustacheleodek.github.io/contents/${encodePath(path)}?ref=${encodeURIComponent(branch)}`;
+      const r = await fetch(api, { headers: { "Accept":"application/vnd.github+json" } });
+      if(!r.ok) throw new Error(`GitHub API ${branch} ${path}: ${r.status}`);
+      const list = await r.json();
+      return list
+        .filter(it => it.type === "file" && IMG_EXT.test(it.name))
+        .map(it => `/fotos/${encodeURIComponent(it.name)}`); // mismo origen
+    }
 
     async function fetchImages(){
-      // Intentamos primero ‘maestro’, y si falla probamos ‘master’ y ‘main’
-      const base = "https://api.github.com/repos/mantemoustacheleodek/mantemoustacheleodek.github.io/contents/Imágenes/hero?ref=";
+      // probamos ramas por si acaso
       const branches = ["maestro","master","main"];
       for (const br of branches) {
-        try {
-          const r = await fetch(base + encodeURIComponent(br), {headers:{Accept:"application/vnd.github+json"}});
-          if (!r.ok) throw new Error("GitHub API " + br + ": " + r.status);
-          const list = await r.json();
-          const u = list.filter(it => it.type==="file" && IMG_EXT.test(it.name))
-                        .map(it => `/Imágenes/hero/${it.name}`)
-                        .sort();
-          if (u.length) { console.log("[Carrusel] Rama usada:", br, u); return u; }
-        } catch(e){ console.warn("[Carrusel]", e); }
+        try{
+          const found = await listFromGitHub("fotos", br);
+          if (found.length) {
+            console.log("[Carrusel] Rama usada:", br, found);
+            return found.sort();
+          }
+        }catch(e){ console.warn("[Carrusel]", e.message); }
       }
       // Fallback local
-      return ["/Imágenes/hero/01.png","/Imágenes/hero/02.png"];
+      return ["/fotos/01.png","/fotos/02.png"];
     }
 
     async function initCarousel(){
@@ -246,6 +265,11 @@
     }
 
     initCarousel();
+
+    // (Opcional) registrar SW si lo usas para cache de imágenes
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(console.warn);
+    }
   </script>
 </body>
 </html>
