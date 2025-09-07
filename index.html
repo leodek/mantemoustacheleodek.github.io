@@ -93,7 +93,9 @@
         <h1>Gestión de equipos, OTs/OPs e insumos — simple, rápida y profesional</h1>
         <p>ManteMoustache acelera la digitalización del mantenimiento en PYMEs industriales. Inventariá equipos, programá preventivos, generá OTs automáticas y controlá insumos en un solo lugar.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="/tienda.html">Ver productos</a>
+          <!-- AHORA: Ver productos hace scroll a la lista (ancla #productos) -->
+          <a class="btn btn-primary" href="#productos">Ver productos</a>
+          <!-- Botón secundario lo dejamos igual -->
           <a class="btn btn-ghost" href="#about">Cómo funciona</a>
         </div>
       </div>
@@ -124,9 +126,19 @@
   <section id="about" class="wrap">
     <h2>Sobre Nosotros</h2>
     <p class="section-sub">Empresa uruguaya enfocada en herramientas simples y robustas para mantenimiento industrial. Liderado por Pablo Rivero (Tecnólogo Industrial Mecánico), combinamos experiencia de planta con software moderno.</p>
+
+    <!-- Ancla exacta para "Ver productos" -->
+    <div id="productos"></div>
+
     <div class="cards">
-      <div class="card"><h3>🛠️ Listado de Equipos</h3><p>Registro, clasificación y seguimiento del estado, con trazabilidad técnica e imágenes por equipo.</p></div>
-      <div class="card"><h3>📦 Listado de Insumos</h3><p>Stock, movimientos y alertas de mínimos, integrado al flujo de OTs y responsables.</p></div>
+      <div class="card">
+        <h3>🛠️ Listado de Equipos</h3>
+        <p>Registro, clasificación y seguimiento del estado, con trazabilidad técnica e imágenes por equipo.</p>
+      </div>
+      <div class="card">
+        <h3>📦 Listado de Insumos</h3>
+        <p>Stock, movimientos y alertas de mínimos, integrado al flujo de OTs y responsables.</p>
+      </div>
     </div>
   </section>
 
@@ -134,7 +146,10 @@
     <div class="wrap">
       <h2>Descarga</h2>
       <p class="section-sub">Próximamente publicaremos instaladores y documentación. Si querés enterarte primero, escribinos a <a href="mailto:mantemoustache@gmail.com">mantemoustache@gmail.com</a>.</p>
-      <div style="text-align:center;margin-top:14px;"><a class="btn btn-primary" href="#contact">Quiero recibir novedades</a></div>
+      <div style="text-align:center;margin-top:14px;">
+        <!-- AHORA: botón dice Tienda y abre tienda.html -->
+        <a class="btn btn-primary" href="/tienda.html">Tienda</a>
+      </div>
     </div>
   </section>
 
@@ -153,12 +168,12 @@
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const el = document.querySelector(a.getAttribute('href')); if(!el) return;
-        e.preventDefault(); el.scrollIntoView({behavior:'smooth'});
+        e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'});
       });
     });
 
-    // ===== Configuración carrusel =====
-    const INTERVAL_MS = 5000; // <-- cambia aquí los segundos (5000 = 5s)
+    // ===== Carrusel con botones =====
+    const INTERVAL_MS = 5000;
     const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
     const imgA   = slides[0].querySelector('img');
@@ -167,13 +182,11 @@
     const nextBtn = document.getElementById('nextBtn');
 
     let urls = [];
-    let idx  = 0;    // índice de la próxima imagen a mostrar
-    let useA = true; // alterna cuál layer está visible
+    let idx  = 0;
+    let useA = true;
     let timer = null;
 
-    // cache-buster para evitar SW/caché
     const cb = () => `?cb=${Date.now()}`;
-
     function preload(src){
       return new Promise((resolve, reject)=>{
         const i = new Image();
@@ -183,12 +196,10 @@
       });
     }
 
-    // Detectar imágenes en /fotos/ (robusto)
     async function listByProbing(){
       const exts = ["jpg","jpeg","png","webp","gif"];
       const extsAll = [...exts, ...exts.map(e=>e.toUpperCase())];
       const candidates = new Set();
-
       for(let n=1; n<=200; n++){
         const z = String(n).padStart(2,"0");
         for(const ext of extsAll){
@@ -198,89 +209,57 @@
       }
       const base = ["hero","portada","planta","equipo","maquinaria","industrial"];
       const namesAll = [...base, ...base.map(s=>s.toUpperCase())];
-      for(const name of namesAll){
-        for(const ext of extsAll){
-          candidates.add(`/fotos/${name}.${ext}`);
-        }
-      }
-
+      for(const name of namesAll){ for(const ext of extsAll){ candidates.add(`/fotos/${name}.${ext}`); } }
       const found = [];
-      await Promise.allSettled(
-        [...candidates].map(src => preload(src + cb()).then(()=>found.push(src)))
-      );
+      await Promise.allSettled([...candidates].map(src => preload(src + cb()).then(()=>found.push(src))));
       found.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true, sensitivity:"base"}));
       return found;
     }
 
     function show(url){
-      // alterna entre las dos capas para hacer fade
       const target = useA ? imgB : imgA;
       const showSlide = useA ? 1 : 0;
       const hideSlide = useA ? 0 : 1;
-
       target.src = url;
       slides[showSlide].classList.add('active');
       slides[hideSlide].classList.remove('active');
-
       useA = !useA;
     }
 
     function nextSlide(){
       if(!urls.length) return;
       const nextUrl = urls[idx % urls.length] + cb();
-      preload(nextUrl).finally(()=>{
-        show(nextUrl);
-        idx++;
-      });
+      preload(nextUrl).finally(()=>{ show(nextUrl); idx++; });
     }
 
     function prevSlide(){
       if(!urls.length) return;
-      idx = (idx - 2 + urls.length) % urls.length; // retrocede uno (ajustando porque nextSlide incrementa)
+      idx = (idx - 2 + urls.length) % urls.length;
       const url = urls[idx % urls.length] + cb();
-      preload(url).finally(()=>{
-        show(url);
-        idx++;
-      });
+      preload(url).finally(()=>{ show(url); idx++; });
     }
 
-    function startAuto(){
-      stopAuto();
-      timer = setInterval(nextSlide, INTERVAL_MS);
-    }
-    function stopAuto(){
-      if(timer){ clearInterval(timer); timer = null; }
-    }
+    function startAuto(){ stopAuto(); timer = setInterval(nextSlide, INTERVAL_MS); }
+    function stopAuto(){ if(timer){ clearInterval(timer); timer = null; } }
 
-    // Init
     (async function init(){
-      // Mostrar algo de entrada (si existe)
       imgA.src = "/fotos/01.jpg" + cb();
       slides[0].classList.add('active');
 
       urls = await listByProbing();
-      if(!urls.length){
-        console.warn("No se encontraron imágenes en /fotos/. Dejá al menos 2 para ver la rotación.");
-        urls = ["/fotos/01.jpg"]; // mantiene una sola si es lo que hay
-      }
-      // arranca desde la segunda si hay varias
+      if(!urls.length){ console.warn("No se encontraron imágenes en /fotos/."); urls = ["/fotos/01.jpg"]; }
       idx = Math.min(1, urls.length-1);
-
-      // Reemplaza la primera por la detectada
       if(urls[0]) imgA.src = urls[0] + cb();
 
-      // Eventos botones
       nextBtn.addEventListener('click', ()=>{ nextSlide(); startAuto(); });
       prevBtn.addEventListener('click', ()=>{ prevSlide(); startAuto(); });
 
-      // Pausar en hover para mejor UX
       stack.addEventListener('mouseenter', stopAuto);
       stack.addEventListener('mouseleave', startAuto);
 
       if(urls.length > 1) startAuto();
 
       console.log(`[Carrusel] Detectadas ${urls.length}:`, urls);
-      console.log(`[Carrusel] Autoplay: cada ${INTERVAL_MS/1000}s`);
     })();
   </script>
 </body>
