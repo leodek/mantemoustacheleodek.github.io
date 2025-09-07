@@ -1,8 +1,8 @@
-// sw.js — cache /images/hero/* con stale-while-revalidate + PNG transparente de fallback
-const CACHE_NAME = "mm-hero-v2";
-const HERO_PATH  = "/images/hero/";
+// sw.js — cache /Imágenes/hero/* (maneja tilde y codificación) con stale-while-revalidate
+const CACHE_NAME = "mm-hero-v3";
+const HERO_PATHS = ["/Imágenes/hero/", "/Im%C3%A1genes/hero/"]; // ← ambas variantes
 
-// PNG 1x1 transparente (data URI)
+// PNG 1x1 transparente
 const TRANSPARENT_PNG =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABiYt2nQAAAABJRU5ErkJggg==";
 
@@ -17,16 +17,14 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const url = new URL(event.request.url);
 
-  // Solo manejamos imágenes dentro de /images/hero/
-  if (url.pathname.startsWith(HERO_PATH)) {
+  // Solo interceptamos imágenes dentro de /Imágenes/hero/ (con y sin codificación)
+  if (HERO_PATHS.some(p => url.pathname.startsWith(p))) {
     event.respondWith((async () => {
       const cache = await caches.open(CACHE_NAME);
       const cached = await cache.match(event.request);
 
-      // Disparo de red (no-store para evitar cache del navegador)
       const networkPromise = fetch(event.request, { cache: "no-store" })
         .then((resp) => {
-          // Si la respuesta es OK (200) la guardamos; si no, dejamos el cache como estaba
           if (resp && resp.ok) {
             cache.put(event.request, resp.clone()).catch(() => {});
             return resp;
@@ -35,13 +33,11 @@ self.addEventListener("fetch", (event) => {
         })
         .catch(() => null);
 
-      // Si hay en cache, servimos ya y actualizamos en segundo plano
       if (cached) {
         event.waitUntil(networkPromise);
         return cached;
       }
 
-      // Si no hay cache, intentamos red; si falla, PNG transparente
       const network = await networkPromise;
       if (network) return network;
 
