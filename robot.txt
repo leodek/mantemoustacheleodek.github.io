@@ -1,3 +1,17 @@
+# robots.txt — ManteMoustache
+# Permite el rastreo completo y declara el sitemap.
+
 User-agent: *
 Allow: /
+
+# (Opcional) deja explícito que CSS/JS son rastreables.
+Allow: /*.css$
+Allow: /*.js$
+
+# (Opcional) si en el futuro publicás carpetas internas sensibles,
+# agregalas abajo como Disallow. Por defecto no bloqueamos nada.
+# Disallow: /private/
+# Disallow: /tmp/
+
+# Ubicación del sitemap (usa siempre la versión con www + https)
 Sitemap: https://www.mantemoustache.com/sitemap.xml
