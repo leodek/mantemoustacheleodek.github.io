@@ -1,48 +1,51 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f9f9f9;
-}
+// sw.js — cache /images/hero/* con stale-while-revalidate + PNG transparente de fallback
+const CACHE_NAME = "mm-hero-v2";
+const HERO_PATH  = "/images/hero/";
 
-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
+// PNG 1x1 transparente (data URI)
+const TRANSPARENT_PNG =
+  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGMAAQAABQABiYt2nQAAAABJRU5ErkJggg==";
 
-.productos {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+});
 
-.producto {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    width: 250px;
-    text-align: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
+self.addEventListener("activate", (event) => {
+  event.waitUntil(self.clients.claim());
+});
 
-.producto img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 5px;
-}
+self.addEventListener("fetch", (event) => {
+  const url = new URL(event.request.url);
 
-.boton-comprar {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-}
+  // Solo manejamos imágenes dentro de /images/hero/
+  if (url.pathname.startsWith(HERO_PATH)) {
+    event.respondWith((async () => {
+      const cache = await caches.open(CACHE_NAME);
+      const cached = await cache.match(event.request);
 
-.boton-comprar:hover {
-    background-color: #45a049;
-}
+      // Disparo de red (no-store para evitar cache del navegador)
+      const networkPromise = fetch(event.request, { cache: "no-store" })
+        .then((resp) => {
+          // Si la respuesta es OK (200) la guardamos; si no, dejamos el cache como estaba
+          if (resp && resp.ok) {
+            cache.put(event.request, resp.clone()).catch(() => {});
+            return resp;
+          }
+          throw new Error("Respuesta de red no OK");
+        })
+        .catch(() => null);
+
+      // Si hay en cache, servimos ya y actualizamos en segundo plano
+      if (cached) {
+        event.waitUntil(networkPromise);
+        return cached;
+      }
+
+      // Si no hay cache, intentamos red; si falla, PNG transparente
+      const network = await networkPromise;
+      if (network) return network;
+
+      return fetch(TRANSPARENT_PNG);
+    })());
+  }
+});
