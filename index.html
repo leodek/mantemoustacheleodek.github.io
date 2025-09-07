@@ -119,10 +119,8 @@
   </footer>
 
   <script>
-    // Footer
-    document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Scroll suave
+    // Año y smooth scroll
+    const y = document.getElementById('year'); if (y) y.textContent = new Date().getFullYear();
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const el = document.querySelector(a.getAttribute('href')); if(!el) return;
@@ -130,26 +128,22 @@
       });
     });
 
-    // ========= Carrusel: sondeo directo en /fotos =========
+    // ========= Carrusel: detección robusta en /fotos =========
     const INTERVAL_MS = 5000;
-    const EXT = ["jpg","jpeg","png","webp","gif"];
-    const COMMON = ["hero","portada","planta","equipo","maquinaria","industrial"];
-    const MAX_NUM = 60;
-
     const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
     const imgA   = slides[0].querySelector('img');
     const imgB   = slides[1].querySelector('img');
 
     let urls = [];
-    let idx = 0;
+    let idx  = 0;
     let useA = true;
 
-    // evita caché
+    // cache-buster para evitar SW/caché
     const cb = () => `?cb=${Date.now()}`;
 
     function preload(src){
-      return new Promise((resolve,reject)=>{
+      return new Promise((resolve, reject)=>{
         const i = new Image();
         i.onload = ()=>resolve(src);
         i.onerror = reject;
@@ -158,55 +152,75 @@
     }
 
     async function listByProbing(){
-      const candidates = [];
-      // numeradas 01..60
-      for(let n=1; n<=MAX_NUM; n++){
-        const base = String(n).padStart(2,"0");
-        for(const ext of EXT) candidates.push(`/fotos/${base}.${ext}`);
-      }
-      // nombres comunes
-      for(const name of COMMON){
-        for(const ext of EXT) candidates.push(`/fotos/${name}.${ext}`);
+      const exts = ["jpg","jpeg","png","webp","gif"];
+      const extsAll = [...exts, ...exts.map(e=>e.toUpperCase())];
+
+      const candidates = new Set();
+
+      // Numeradas 1..200 con y sin cero a la izquierda
+      for(let n=1; n<=200; n++){
+        const z = String(n).padStart(2,"0");
+        for(const ext of extsAll){
+          candidates.add(`/fotos/${z}.${ext}`);
+          candidates.add(`/fotos/${n}.${ext}`);
+        }
       }
 
+      // Nombres comunes (y en MAYÚSCULAS)
+      const baseNames = ["hero","portada","planta","equipo","maquinaria","industrial"];
+      const namesAll = [...baseNames, ...baseNames.map(s=>s.toUpperCase())];
+      for(const name of namesAll){
+        for(const ext of extsAll){
+          candidates.add(`/fotos/${name}.${ext}`);
+        }
+      }
+
+      // Probar cuáles existen
       const found = [];
       await Promise.allSettled(
-        candidates.map(src => preload(src + cb()).then(()=>found.push(src)))
+        [...candidates].map(src => preload(src + cb()).then(()=>found.push(src)))
       );
-      return [...new Set(found)].sort();
+
+      found.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true, sensitivity:"base"}));
+      return found;
     }
 
     async function initCarousel(){
-      // intenta mostrar al menos /fotos/01.jpg mientras sondea
+      // Muestra algo desde el inicio (si existe)
       imgA.src = "/fotos/01.jpg" + cb();
       slides[0].classList.add('active');
 
       urls = await listByProbing();
       if(!urls.length){
-        console.warn("No se encontraron imágenes en /fotos/. Subí al menos /fotos/01.jpg");
-        return;
+        console.warn("No se encontraron imágenes en /fotos/. Dejá al menos 2 para ver la rotación.");
+        urls = ["/fotos/01.jpg"]; // mantiene la única si es lo que hay
       }
 
-      // reemplaza la primera si es distinta
+      // Usar la primera detectada
       if(urls[0]) imgA.src = urls[0] + cb();
+
+      console.log(`[Carrusel] Detectadas ${urls.length}:`, urls);
 
       if(urls.length > 1){
         idx = 1;
         setInterval(nextSlide, INTERVAL_MS);
       }
-
-      console.log("[Carrusel] Imágenes detectadas:", urls);
     }
 
     async function nextSlide(){
       const nextUrl = urls[idx % urls.length] + cb();
-      try { await preload(nextUrl); } catch(e){}
+      try { await preload(nextUrl); } catch(e) { /* si falla, pasamos a la siguiente */ }
       if(useA){
-        imgB.src = nextUrl; slides[1].classList.add('active'); slides[0].classList.remove('active');
-      }else{
-        imgA.src = nextUrl; slides[0].classList.add('active'); slides[1].classList.remove('active');
+        imgB.src = nextUrl;
+        slides[1].classList.add('active');
+        slides[0].classList.remove('active');
+      } else {
+        imgA.src = nextUrl;
+        slides[0].classList.add('active');
+        slides[1].classList.remove('active');
       }
-      useA = !useA; idx++;
+      useA = !useA;
+      idx++;
     }
 
     initCarousel();
