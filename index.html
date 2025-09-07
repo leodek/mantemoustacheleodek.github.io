@@ -18,9 +18,16 @@
   <meta property="og:image" content="https://mantemoustacheleodek.github.io/splash.png" />
   <meta property="og:locale" content="es_UY" />
 
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="ManteMoustache — Soluciones Industriales" />
+  <meta name="twitter:description" content="Gestión de equipos, OTs/OPs e insumos para industria." />
+  <meta name="twitter:image" content="https://mantemoustacheleodek.github.io/splash.png" />
+
   <link rel="icon" href="/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
+  <!-- Tu hoja de estilos -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -110,6 +117,7 @@
 
   <!-- Script del carrusel -->
   <script>
+    // Año actual
     document.getElementById('year').textContent = new Date().getFullYear();
 
     // Scroll suave
@@ -122,10 +130,12 @@
       });
     });
 
+    // Registrar Service Worker para cache
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(console.warn);
     }
 
+    // Configuración carrusel
     const INTERVAL_MS = 5000;
     const IMG_EXT = /\.(png|jpe?g|webp|svg)$/i;
 
@@ -148,7 +158,7 @@
       });
     }
 
-    // IMPORTANTE: aquí se usa la carpeta con tilde "Imágenes"
+    // Cargar imágenes automáticamente desde la carpeta "Imágenes/hero"
     async function fetchImagesFromHero(){
       const api = `https://api.github.com/repos/mantemoustacheleodek/mantemoustacheleodek.github.io/contents/Imágenes/hero?ref=maestro`;
       const r = await fetch(api, { headers: { "Accept":"application/vnd.github+json" } });
