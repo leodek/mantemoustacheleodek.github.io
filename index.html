@@ -112,6 +112,16 @@
 
       <div class="hero-illu">
         <div class="frame">
+
+          <!-- TEST visual: imagen directa -->
+          <div style="padding:8px 0">
+            <a href="/fotos/01.jpg" target="_blank" style="color:#FFD700">Abrir /fotos/01.jpg</a>
+            <div style="margin-top:8px;background:#0b1a33;border:1px dashed #556; border-radius:10px;padding:10px">
+              <img src="/fotos/01.jpg" alt="TEST /fotos/01.jpg" style="max-width:100%;border-radius:8px">
+            </div>
+          </div>
+          <!-- FIN TEST -->
+
           <div class="slide-stack" id="heroStack">
             <div class="slide active"><img alt="Imagen industrial" /></div>
             <div class="slide"><img alt="Imagen industrial" /></div>
@@ -176,7 +186,7 @@
       });
     });
 
-    // ===== Carrusel: carga SOLO la imagen 01.jpg =====
+    // ===== Carrusel con UNA sola imagen =====
     const INTERVAL_MS = 5000;
 
     const stack  = document.getElementById('heroStack');
@@ -184,7 +194,7 @@
     const imgA   = slides[0].querySelector('img');
     const imgB   = slides[1].querySelector('img');
 
-    let urls = ["/fotos/01.jpg"]; // imagen forzada
+    let urls = ["/fotos/01.jpg"]; // Imagen fija
     let idx  = 0;
     let useA = true;
 
@@ -200,17 +210,17 @@
     async function initCarousel(){
       if(!urls.length) return;
 
-      try { await preload(urls[0]); } catch(e){}
+      try { await preload(urls[0]); } catch(e){ console.warn("No carga /fotos/01.jpg", e); }
       imgA.src = urls[0];
       slides[0].classList.add('active');
 
       idx = 1;
       setInterval(nextSlide, INTERVAL_MS);
-      console.log("[Carrusel] Imágenes cargadas:", urls);
+      console.log("[Carrusel] Imagen cargada:", urls);
     }
 
     async function nextSlide(){
-      if(!urls.length) return;
+      if(urls.length < 2) return; // si solo hay una imagen, no se hace fade
       const nextUrl = urls[idx % urls.length];
       try { await preload(nextUrl); } catch(e){}
       if(useA){
