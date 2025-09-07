@@ -82,7 +82,7 @@
     }
     nav a:hover{ color:var(--accent); background:rgba(255,215,0,.08); }
 
-    /* ===== Hero split (texto izquierda / imagen derecha) ===== */
+    /* ===== Hero split (texto izquierda / imagen derecha con carrusel) ===== */
     .hero{
       background:linear-gradient(180deg, var(--panel) 0%, var(--panel-2) 100%);
       border-bottom:1px solid #0e1a31;
@@ -125,14 +125,22 @@
       box-shadow:0 16px 40px -20px var(--shadow), 0 0 0 6px var(--ring);
       backdrop-filter:saturate(130%) blur(2px);
       max-width:640px; width:100%;
+      overflow:hidden;             /* importante para el fade */
     }
-    .hero-illu img{
-      width:100%;
-      max-height:520px;  /* ← imagen grande */
-      object-fit:contain;
-      display:block;
-      border-radius:14px;
+
+    /* Doble capa para crossfade */
+    .slide-stack{
+      position:relative; width:100%; height:100%;
     }
+    .slide{
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      opacity:0; transition:opacity 800ms ease;
+    }
+    .slide img{
+      width:100%; max-height:520px; object-fit:contain; display:block; border-radius:14px;
+    }
+    .slide.active{ opacity:1; }
 
     /* ===== Secciones ===== */
     section{ padding:64px 20px; }
@@ -176,10 +184,28 @@
     /* ===== Responsive ===== */
     @media (max-width: 980px){
       .hero-grid{ grid-template-columns:1fr; gap:28px; }
-      .hero-illu .frame{ max-width:760px; }
       .cards{ grid-template-columns:1fr; }
     }
   </style>
+
+  <!-- JSON-LD Organization -->
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Organization",
+    "name":"ManteMoustache",
+    "url":"https://www.mantemoustache.com/",
+    "logo":"https://www.mantemoustache.com/images/splash.png",
+    "contactPoint":[{
+      "@type":"ContactPoint",
+      "email":"mantemoustache@gmail.com",
+      "telephone":"+59898153659",
+      "contactType":"customer support",
+      "areaServed":"UY"
+    }],
+    "sameAs":["https://github.com/leodek"]
+  }
+  </script>
 </head>
 <body>
   <!-- Header con logo que vuelve a inicio -->
@@ -197,7 +223,7 @@
     </div>
   </header>
 
-  <!-- Hero split -->
+  <!-- Hero split con carrusel de imágenes (2ª columna) -->
   <section class="hero">
     <div class="hero-grid">
       <div>
@@ -213,8 +239,11 @@
 
       <div class="hero-illu">
         <div class="frame">
-          <!-- Poné tu imagen grande aquí -->
-          <img src="images/hero-industria.png" alt="Ilustración de plataforma industrial y mantenimiento" />
+          <!-- Stack para crossfade -->
+          <div class="slide-stack" id="heroStack">
+            <div class="slide active"><img alt="Ilustración de plataforma industrial y mantenimiento" /></div>
+            <div class="slide"><img alt="Ilustración de plataforma industrial y mantenimiento" /></div>
+          </div>
         </div>
       </div>
     </div>
@@ -278,6 +307,107 @@
         el.scrollIntoView({behavior:'smooth'});
       });
     });
+
+    // ========= Carrusel desde carpeta de GitHub =========
+    // CONFIGURACIÓN: actualizá estos valores
+    const GITHUB_USER   = "leodek";            // ← tu usuario
+    const GITHUB_REPO   = "leodek.github.io";  // ← repo donde está tu web
+    const GITHUB_PATH   = "images/hero";       // ← carpeta con las imágenes
+    const GITHUB_BRANCH = "main";              // ← "main" o "gh-pages"
+    const INTERVAL_MS   = 5000;                // 5s por pedido :)
+
+    // Extensiones válidas
+    const IMG_EXT = /\.(png|jpe?g|webp|svg)$/i;
+
+    // DOM
+    const stack = document.getElementById('heroStack');
+    const slides = stack.querySelectorAll('.slide');
+    const imgA = slides[0].querySelector('img');
+    const imgB = slides[1].querySelector('img');
+
+    let urls = [];     // URLs finales de descarga
+    let idx  = 0;      // índice actual
+    let useA = true;   // toggle A/B para crossfade
+    let timer = null;
+
+    function preload(src){
+      return new Promise((resolve, reject)=>{
+        const img = new Image();
+        img.onload = ()=> resolve(src);
+        img.onerror = reject;
+        img.src = src;
+      });
+    }
+
+    async function fetchGitHubFolder(user, repo, path, branch="main"){
+      const api = `https://api.github.com/repos/${encodeURIComponent(user)}/${encodeURIComponent(repo)}/contents/${encodeURIComponent(path)}?ref=${encodeURIComponent(branch)}`;
+      const r = await fetch(api, { headers: { "Accept":"application/vnd.github+json" } });
+      if(!r.ok) throw new Error("GitHub API error " + r.status);
+      const list = await r.json();
+      return list
+        .filter(item => item.type === "file" && IMG_EXT.test(item.name))
+        .map(item => item.download_url);
+    }
+
+    async function initCarousel(){
+      try{
+        urls = await fetchGitHubFolder(GITHUB_USER, GITHUB_REPO, GITHUB_PATH, GITHUB_BRANCH);
+      }catch(err){
+        console.warn("No se pudo listar la carpeta del repo. Usando fallback local.", err);
+        // Fallback: editá esta lista si querés un respaldo local
+        urls = [
+          "images/hero/1.png",
+          "images/hero/2.png",
+          "images/hero/3.png"
+        ];
+      }
+      if(!urls.length){
+        console.warn("No hay imágenes en la carpeta del repo:", GITHUB_PATH);
+        return;
+      }
+
+      // Orden estable y preload inicial
+      urls.sort();
+      try { await preload(urls[0]); } catch(e){}
+
+      // Arranque con primera imagen
+      imgA.src = urls[0];
+      slides[0].classList.add('active');
+
+      // Preload siguiente
+      if(urls[1]) preload(urls[1]).catch(()=>{});
+
+      // Intervalo de rotación
+      idx = 1;
+      timer = setInterval(nextSlide, INTERVAL_MS);
+    }
+
+    async function nextSlide(){
+      if(!urls.length) return;
+
+      const nextUrl = urls[idx % urls.length];
+      try { await preload(nextUrl); } catch(e){ /* seguimos igual si falla */ }
+
+      // Crossfade entre A y B
+      if(useA){
+        imgB.src = nextUrl;
+        slides[1].classList.add('active');
+        slides[0].classList.remove('active');
+      }else{
+        imgA.src = nextUrl;
+        slides[0].classList.add('active');
+        slides[1].classList.remove('active');
+      }
+      useA = !useA;
+      idx++;
+
+      // Pre-cargar la próxima
+      const ahead = urls[idx % urls.length];
+      preload(ahead).catch(()=>{});
+    }
+
+    // Iniciar
+    initCarousel();
   </script>
 </body>
 </html>
