@@ -37,9 +37,26 @@
     .hero-illu{display:flex;align-items:center;justify-content:center}
     .frame{background:rgba(8,20,43,.6);border:1px solid #0e1a31;border-radius:20px;padding:18px;box-shadow:0 16px 40px -20px var(--shadow),0 0 0 6px var(--ring);max-width:640px;width:100%;overflow:hidden}
     .slide-stack{position:relative;width:100%;height:520px !important}
-    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 800ms ease}
+    .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 600ms ease}
     .slide img{width:100% !important;height:100% !important;max-height:none !important;object-fit:contain !important;border-radius:14px;display:block;background:#fff}
     .slide.active{opacity:1}
+
+    /* Botones del carrusel */
+    .nav-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:42px; height:42px; border-radius:50%;
+      border:1px solid rgba(255,255,255,.35);
+      background:rgba(8,20,43,.55); color:#fff; backdrop-filter: blur(6px);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; user-select:none;
+      box-shadow:0 6px 18px -10px var(--shadow);
+      transition:background .2s, transform .1s;
+    }
+    .nav-btn:hover{ background:rgba(8,20,43,.75) }
+    .nav-btn:active{ transform:translateY(-50%) scale(.98) }
+    .nav-prev{ left:8px }
+    .nav-next{ right:8px }
+    .nav-btn svg{ width:20px; height:20px }
 
     section{padding:64px 20px}
     h2{text-align:center;color:var(--accent);font-size:clamp(1.6rem,2.5vw,2rem);margin-bottom:10px}
@@ -86,6 +103,18 @@
           <div class="slide-stack" id="heroStack">
             <div class="slide active"><img alt="Imagen industrial" /></div>
             <div class="slide"><img alt="Imagen industrial" /></div>
+
+            <!-- Botones -->
+            <button class="nav-btn nav-prev" id="prevBtn" aria-label="Imagen anterior" title="Anterior">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M15 18l-6-6 6-6"/>
+              </svg>
+            </button>
+            <button class="nav-btn nav-next" id="nextBtn" aria-label="Imagen siguiente" title="Siguiente">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 6l6 6-6 6"/>
+              </svg>
+            </button>
           </div>
         </div>
       </div>
@@ -128,16 +157,19 @@
       });
     });
 
-    // ========= Carrusel: detección robusta en /fotos =========
-    const INTERVAL_MS = 5000;
+    // ===== Configuración carrusel =====
+    const INTERVAL_MS = 5000; // <-- cambia aquí los segundos (5000 = 5s)
     const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
     const imgA   = slides[0].querySelector('img');
     const imgB   = slides[1].querySelector('img');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
     let urls = [];
-    let idx  = 0;
-    let useA = true;
+    let idx  = 0;    // índice de la próxima imagen a mostrar
+    let useA = true; // alterna cuál layer está visible
+    let timer = null;
 
     // cache-buster para evitar SW/caché
     const cb = () => `?cb=${Date.now()}`;
@@ -151,13 +183,12 @@
       });
     }
 
+    // Detectar imágenes en /fotos/ (robusto)
     async function listByProbing(){
       const exts = ["jpg","jpeg","png","webp","gif"];
       const extsAll = [...exts, ...exts.map(e=>e.toUpperCase())];
-
       const candidates = new Set();
 
-      // Numeradas 1..200 con y sin cero a la izquierda
       for(let n=1; n<=200; n++){
         const z = String(n).padStart(2,"0");
         for(const ext of extsAll){
@@ -165,65 +196,92 @@
           candidates.add(`/fotos/${n}.${ext}`);
         }
       }
-
-      // Nombres comunes (y en MAYÚSCULAS)
-      const baseNames = ["hero","portada","planta","equipo","maquinaria","industrial"];
-      const namesAll = [...baseNames, ...baseNames.map(s=>s.toUpperCase())];
+      const base = ["hero","portada","planta","equipo","maquinaria","industrial"];
+      const namesAll = [...base, ...base.map(s=>s.toUpperCase())];
       for(const name of namesAll){
         for(const ext of extsAll){
           candidates.add(`/fotos/${name}.${ext}`);
         }
       }
 
-      // Probar cuáles existen
       const found = [];
       await Promise.allSettled(
         [...candidates].map(src => preload(src + cb()).then(()=>found.push(src)))
       );
-
       found.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true, sensitivity:"base"}));
       return found;
     }
 
-    async function initCarousel(){
-      // Muestra algo desde el inicio (si existe)
+    function show(url){
+      // alterna entre las dos capas para hacer fade
+      const target = useA ? imgB : imgA;
+      const showSlide = useA ? 1 : 0;
+      const hideSlide = useA ? 0 : 1;
+
+      target.src = url;
+      slides[showSlide].classList.add('active');
+      slides[hideSlide].classList.remove('active');
+
+      useA = !useA;
+    }
+
+    function nextSlide(){
+      if(!urls.length) return;
+      const nextUrl = urls[idx % urls.length] + cb();
+      preload(nextUrl).finally(()=>{
+        show(nextUrl);
+        idx++;
+      });
+    }
+
+    function prevSlide(){
+      if(!urls.length) return;
+      idx = (idx - 2 + urls.length) % urls.length; // retrocede uno (ajustando porque nextSlide incrementa)
+      const url = urls[idx % urls.length] + cb();
+      preload(url).finally(()=>{
+        show(url);
+        idx++;
+      });
+    }
+
+    function startAuto(){
+      stopAuto();
+      timer = setInterval(nextSlide, INTERVAL_MS);
+    }
+    function stopAuto(){
+      if(timer){ clearInterval(timer); timer = null; }
+    }
+
+    // Init
+    (async function init(){
+      // Mostrar algo de entrada (si existe)
       imgA.src = "/fotos/01.jpg" + cb();
       slides[0].classList.add('active');
 
       urls = await listByProbing();
       if(!urls.length){
         console.warn("No se encontraron imágenes en /fotos/. Dejá al menos 2 para ver la rotación.");
-        urls = ["/fotos/01.jpg"]; // mantiene la única si es lo que hay
+        urls = ["/fotos/01.jpg"]; // mantiene una sola si es lo que hay
       }
+      // arranca desde la segunda si hay varias
+      idx = Math.min(1, urls.length-1);
 
-      // Usar la primera detectada
+      // Reemplaza la primera por la detectada
       if(urls[0]) imgA.src = urls[0] + cb();
 
+      // Eventos botones
+      nextBtn.addEventListener('click', ()=>{ nextSlide(); startAuto(); });
+      prevBtn.addEventListener('click', ()=>{ prevSlide(); startAuto(); });
+
+      // Pausar en hover para mejor UX
+      stack.addEventListener('mouseenter', stopAuto);
+      stack.addEventListener('mouseleave', startAuto);
+
+      if(urls.length > 1) startAuto();
+
       console.log(`[Carrusel] Detectadas ${urls.length}:`, urls);
-
-      if(urls.length > 1){
-        idx = 1;
-        setInterval(nextSlide, INTERVAL_MS);
-      }
-    }
-
-    async function nextSlide(){
-      const nextUrl = urls[idx % urls.length] + cb();
-      try { await preload(nextUrl); } catch(e) { /* si falla, pasamos a la siguiente */ }
-      if(useA){
-        imgB.src = nextUrl;
-        slides[1].classList.add('active');
-        slides[0].classList.remove('active');
-      } else {
-        imgA.src = nextUrl;
-        slides[0].classList.add('active');
-        slides[1].classList.remove('active');
-      }
-      useA = !useA;
-      idx++;
-    }
-
-    initCarousel();
+      console.log(`[Carrusel] Autoplay: cada ${INTERVAL_MS/1000}s`);
+    })();
   </script>
 </body>
 </html>
