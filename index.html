@@ -9,7 +9,6 @@
   <meta name="description" content="ManteMoustache: soluciones digitales para gestión industrial, equipos, OTs/OPs e insumos." />
   <link rel="canonical" href="https://mantemoustacheleodek.github.io/" />
 
-  <!-- Open Graph -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="ManteMoustache — Soluciones Industriales" />
   <meta property="og:description" content="Gestión de equipos, OTs/OPs e insumos para industria." />
@@ -21,7 +20,6 @@
   <link rel="icon" href="/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 
-  <!-- CSS incrustado -->
   <style>
     :root{
       --bg:#0A192F; --panel:#0F1E3A; --panel-2:#112240;
@@ -85,7 +83,6 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="wrap topbar">
       <a class="brand" href="/" aria-label="Ir al inicio">
@@ -100,7 +97,6 @@
     </div>
   </header>
 
-  <!-- Hero con carrusel -->
   <section class="hero">
     <div class="hero-grid">
       <div>
@@ -125,7 +121,6 @@
     </div>
   </section>
 
-  <!-- Sobre nosotros -->
   <section id="about" class="wrap">
     <h2>Sobre Nosotros</h2>
     <p class="section-sub">
@@ -144,7 +139,6 @@
     </div>
   </section>
 
-  <!-- Descarga -->
   <section id="download" class="download">
     <div class="wrap">
       <h2>Descarga</h2>
@@ -159,7 +153,6 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer id="contact">
     <div class="footer-inner">
       <p>Contacto: Pablo Rivero</p>
@@ -169,24 +162,21 @@
     </div>
   </footer>
 
-  <!-- Scripts -->
   <script>
-    // Año actual
+    // Año actual y smooth scroll
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Smooth scroll
     document.querySelectorAll('a[href^="#"]').forEach(a=>{
       a.addEventListener('click', e=>{
         const el = document.querySelector(a.getAttribute('href'));
-        if(!el) return;
-        e.preventDefault();
+        if(!el) return; e.preventDefault();
         el.scrollIntoView({behavior:'smooth'});
       });
     });
 
-    // ===== Carrusel: carga desde /fotos (rama maestro) =====
+    // ===== Carrusel sin API: busca imágenes en /fotos =====
     const INTERVAL_MS = 5000;
-    const IMG_EXT = /\.(png|jpe?g|webp|svg)$/i;
+    const EXT = ["png","jpg","jpeg","webp","svg"];  // extensiones válidas
+    const MAX_NUM = 50;                              // hasta 50 archivos numerados
 
     const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
@@ -206,49 +196,58 @@
       });
     }
 
-    // codifica segmentos para la API (sin romper '/')
-    function encodePath(path){
-      return path.split('/').map(seg => encodeURIComponent(seg)).join('/');
-    }
+    // 1) Lista manual opcional (si querés control total, descomentá y edita):
+    // const MANUAL = ["/fotos/01.png","/fotos/maquinaria.webp","/fotos/planta.jpg"];
 
-    async function listFromGitHub(path, branch){
-      const api = `https://api.github.com/repos/mantemoustacheleodek/mantemoustacheleodek.github.io/contents/${encodePath(path)}?ref=${encodeURIComponent(branch)}`;
-      const r = await fetch(api, { headers: { "Accept":"application/vnd.github+json" } });
-      if(!r.ok) throw new Error(`GitHub API ${branch} ${path}: ${r.status}`);
-      const list = await r.json();
-      return list
-        .filter(it => it.type === "file" && IMG_EXT.test(it.name))
-        .map(it => `/fotos/${encodeURIComponent(it.name)}`); // mismo origen
-    }
-
-    async function fetchImages(){
-      // probamos ramas por si acaso
-      const branches = ["maestro","master","main"];
-      for (const br of branches) {
-        try{
-          const found = await listFromGitHub("fotos", br);
-          if (found.length) {
-            console.log("[Carrusel] Rama usada:", br, found);
-            return found.sort();
-          }
-        }catch(e){ console.warn("[Carrusel]", e.message); }
+    // 2) Auto-descubrimiento: prueba /fotos/01..50 con varias extensiones y se queda con las que existen
+    async function discoverByProbing(){
+      const candidates = [];
+      for(let n=1; n<=MAX_NUM; n++){
+        const base = String(n).padStart(2,"0");
+        for(const ext of EXT){
+          candidates.push(`/fotos/${base}.${ext}`);
+        }
       }
-      // Fallback local
-      return ["/fotos/01.png","/fotos/02.png"];
+      // también prueba archivos no numerados comunes (opcional)
+      const common = ["hero","portada","planta","equipo","maquinaria","industrial"];
+      for(const name of common){
+        for(const ext of EXT){
+          candidates.push(`/fotos/${name}.${ext}`);
+        }
+      }
+
+      // Filtra por las que realmente existen (onload)
+      const found = [];
+      await Promise.allSettled(candidates.map(src => preload(src).then(()=>found.push(src))));
+      // Elimina duplicados y ordena
+      return Array.from(new Set(found)).sort();
     }
 
     async function initCarousel(){
-      urls = await fetchImages();
-      if(!urls.length) return;
+      try{
+        // urls = MANUAL && MANUAL.length ? MANUAL : await discoverByProbing();
+        urls = await discoverByProbing();
+      }catch(e){
+        console.warn("No se pudo descubrir imágenes:", e);
+        urls = [];
+      }
 
+      if(!urls.length){
+        console.warn("No se encontraron imágenes en /fotos. Subí al menos /fotos/01.png");
+        return;
+      }
+
+      // Primera imagen
       try { await preload(urls[0]); } catch(e){}
       imgA.src = urls[0];
       slides[0].classList.add('active');
 
+      // Preload siguiente
       if(urls[1]) preload(urls[1]).catch(()=>{});
 
       idx = 1;
       setInterval(nextSlide, INTERVAL_MS);
+      console.log("[Carrusel] Imágenes detectadas:", urls);
     }
 
     async function nextSlide(){
@@ -266,9 +265,9 @@
 
     initCarousel();
 
-    // (Opcional) registrar SW si lo usas para cache de imágenes
+    // Si usás un SW para cache, no hace falta tocarlo; el carrusel usa rutas del mismo origen (/fotos/…)
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(console.warn);
+      navigator.serviceWorker.register('/sw.js').catch(()=>{});
     }
   </script>
 </body>
