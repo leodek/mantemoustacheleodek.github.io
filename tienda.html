@@ -3,18 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Tienda de Productos de ManteMoustache</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    /* Estilos básicos de la tienda (pueden convivir con styles.css) */
-    body { font-family: Arial, sans-serif; }
-    header { text-align:center; padding:28px 16px; }
-    header h1 { margin:0 0 8px; }
-    header p { color:#555; margin:0; }
+  <title>Tienda de productos — ManteMoustache</title>
+  <meta name="description" content="Tienda digital de ManteMoustache: compra módulos de software de mantenimiento industrial y recibí tu licencia por email." />
+  <link rel="icon" href="/favicon.ico" />
 
+  <!-- Mini tema compatible con el header del sitio -->
+  <style>
+    :root{--bg:#0A192F;--panel:#0F1E3A;--panel-2:#112240;--text:#E6F1FF;--muted:#8892B0;--accent:#FFD700;--shadow:rgba(0,0,0,.5)}
+    *{box-sizing:border-box} html,body{margin:0;padding:0}
+    body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#f7f8fb;color:#0f223b;min-height:100vh;display:flex;flex-direction:column}
+
+    /* Header como el index */
+    header{background:var(--panel);border-bottom:1px solid #0e1a31;position:sticky;top:0;z-index:50}
+    .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
+    .topbar{display:flex;align-items:center;justify-content:space-between;height:74px}
+    .brand{display:flex;align-items:center;gap:12px;text-decoration:none}
+    .brand img{height:56px;filter:drop-shadow(0 2px 6px var(--shadow))}
+    .brand-title{font-weight:700;color:var(--text);font-size:1.1rem}
+    nav a{color:var(--text);text-decoration:none;font-weight:600;margin-left:22px;padding:8px 10px;border-radius:8px;transition:.2s}
+    nav a:hover{color:var(--accent);background:rgba(255,215,0,.08)}
+    nav a.active{color:var(--accent);background:rgba(255,215,0,.12)}
+
+    /* Hero simple de la tienda */
+    .shop-hero{background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);padding:36px 0;border-bottom:1px solid #0e1a31}
+    .shop-hero .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .shop-hero h1{color:var(--text);margin:0;font-size:clamp(1.8rem,3vw,2.4rem)}
+    .shop-hero p{color:var(--muted);margin:.4rem 0 0;max-width:60ch}
+
+    /* Grid de productos (tu estilo, levemente pulido) */
     .productos {
       max-width: 1100px;
-      margin: 24px auto;
+      margin: 24px auto 40px;
       padding: 0 16px;
       display: grid;
       grid-template-columns: repeat(3, minmax(240px, 1fr));
@@ -37,6 +56,7 @@
       height: 180px;
       object-fit: cover;
       display: block;
+      background:#f2f2f2;
     }
     .producto .info {
       padding: 16px;
@@ -47,10 +67,10 @@
     }
     .producto h3 { margin: 0; font-size: 1.05rem; }
     .producto p.desc { margin: 0; color: #666; font-size: 0.95rem; line-height: 1.45; }
-    .precio { font-weight: bold; margin-top: 4px; }
+    .precio { font-weight: 700; margin-top: 4px; color:#0f223b }
 
     .boton-comprar {
-      margin: 14px 16px 16px;
+      margin: 14px 16px 18px;
       padding: 10px 14px;
       border: none;
       border-radius: 8px;
@@ -58,19 +78,19 @@
       color: #fff;
       font-weight: 700;
       cursor: pointer;
-      transition: transform .05s ease, opacity .2s ease;
+      transition: transform .05s ease, opacity .2s ease, box-shadow .2s ease;
+      box-shadow: 0 8px 18px rgba(26,35,126,.25);
     }
     .boton-comprar:hover { opacity: .95; }
     .boton-comprar:active { transform: scale(.98); }
 
-    /* Footer (tu estilo original) */
+    /* Footer */
     footer {
       background-color: #1a237e;
       color: white;
       text-align: center;
       padding: 20px;
-      margin-top: 30px;
-      font-family: Arial, sans-serif;
+      margin-top: auto;
     }
     .contacto { margin: 10px 0; }
     .contacto a { color:#FFD700; text-decoration:none; }
@@ -79,10 +99,31 @@
   </style>
 </head>
 <body>
+  <!-- Header con logo + navegación (link a inicio) -->
   <header>
-    <h1>Tienda Digital de ManteMoustache</h1>
-    <p>Descargá tus productos y recibí la licencia al instante</p>
+    <div class="wrap topbar">
+      <a class="brand" href="/" aria-label="Ir al inicio">
+        <img src="/splash.png" alt="ManteMoustache logo" />
+        <span class="brand-title">ManteMoustache</span>
+      </a>
+      <nav id="storeNav" aria-label="Principal">
+        <a href="/">Inicio</a>
+        <a href="/#about">Sobre Nosotros</a>
+        <a href="/#download">Descarga</a>
+        <a href="/tienda.html">Tienda</a>
+        <a href="/#contact">Contacto</a>
+      </nav>
+    </div>
   </header>
+
+  <section class="shop-hero">
+    <div class="wrap">
+      <div>
+        <h1>Tienda Digital</h1>
+        <p>Descargá tus productos y recibí la licencia al instante. Módulos pensados para profesionalizar la gestión de mantenimiento industrial.</p>
+      </div>
+    </div>
+  </section>
 
   <div class="productos">
     <!-- Producto 1: Gestión de Equipos -->
@@ -93,7 +134,7 @@
         <p class="desc">Inventario, trazabilidad técnica e historial por equipo. Fotos, documentos y estado en tiempo real.</p>
         <div class="precio">USD 19</div>
       </div>
-      <button class="boton-comprar" onclick="comprar('Gestion de Equipos', 19)">Comprar</button>
+      <button class="boton-comprar" onclick="comprar('Gestión de Equipos', 19)">Comprar</button>
     </div>
 
     <!-- Producto 2: Gestión de Insumos -->
@@ -104,7 +145,7 @@
         <p class="desc">Stock, movimientos y alertas de mínimos. Controlá consumos y reposiciones por área y responsable.</p>
         <div class="precio">USD 19</div>
       </div>
-      <button class="boton-comprar" onclick="comprar('Gestion de Insumos', 19)">Comprar</button>
+      <button class="boton-comprar" onclick="comprar('Gestión de Insumos', 19)">Comprar</button>
     </div>
 
     <!-- Producto 3: Gestión de Mantenimiento -->
@@ -115,11 +156,10 @@
         <p class="desc">OTs preventivas y correctivas, calendario, priorización y seguimiento. Indicadores para mejorar tu operación.</p>
         <div class="precio">USD 29</div>
       </div>
-      <button class="boton-comprar" onclick="comprar('Gestion de Mantenimiento', 29)">Comprar</button>
+      <button class="boton-comprar" onclick="comprar('Gestión de Mantenimiento', 29)">Comprar</button>
     </div>
   </div>
 
-  <!-- Pie de página -->
   <footer>
     <div class="contacto">
       <p>Contacto: Pablo Rivero</p>
@@ -131,11 +171,20 @@
     </div>
   </footer>
 
-  <!-- Si tenés un script.js propio lo podés seguir usando.
-       Este bloque define 'comprar' como fallback para abrir un mail prellenado. -->
   <script>
     // Año dinámico
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Marca activo "Tienda" al estar en /tienda.html
+    (function(){
+      const nav = document.getElementById('storeNav');
+      if(!nav) return;
+      const links = [...nav.querySelectorAll('a')];
+      links.forEach(a => {
+        const href = (a.getAttribute('href') || '').toLowerCase();
+        a.classList.toggle('active', href.includes('/tienda.html'));
+      });
+    })();
 
     // Fallback de compra por email (si no existe comprar() en script.js)
     if (typeof comprar !== 'function') {
@@ -156,7 +205,7 @@
     }
   </script>
 
-  <!-- Tu script externo (si lo usás) -->
+  <!-- Si tenés un script externo propio -->
   <script src="script.js"></script>
 </body>
 </html>
