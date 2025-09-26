@@ -4,55 +4,18 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="robots" content="index, follow" />
-  <title>Software de Mantenimiento para PYMEs | ManteMoustache</title>
-  <meta name="description" content="ManteMoustache es software de mantenimiento industrial (GMAO) para PYMEs: gestión de mantenimiento, preventivos, OTs, equipos e insumos en un solo lugar." />
+  <title>ManteMoustache — Software de mantenimiento industrial</title>
+
+  <!-- SEO -->
+  <meta name="description" content="ManteMoustache: software de mantenimiento industrial para PYMEs. Gestión de equipos, insumos, mantenimiento preventivo/correctivo, OTs automáticas y control de inventario." />
   <link rel="canonical" href="https://www.mantemoustache.com/" />
   <link rel="icon" href="/favicon.ico" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <!-- Open Graph / Twitter -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="Software de Mantenimiento para PYMEs | ManteMoustache" />
-  <meta property="og:description" content="Gestión de mantenimiento industrial simple, rápida y profesional. Preventivos, OTs, equipos e insumos en un solo lugar." />
-  <meta property="og:url" content="https://www.mantemoustache.com/" />
-  <meta property="og:image" content="https://www.mantemoustache.com/og.jpg" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Software de Mantenimiento para PYMEs | ManteMoustache" />
-  <meta name="twitter:description" content="GMAO para PYMEs: mantenimiento preventivo y correctivo, OTs, inventario y más." />
-  <meta name="twitter:image" content="https://www.mantemoustache.com/og.jpg" />
-
-  <!-- Structured data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "ManteMoustache",
-    "url": "https://www.mantemoustache.com/",
-    "logo": "https://www.mantemoustache.com/splash.png",
-    "sameAs": []
-  }
-  </script>
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    "name": "ManteMoustache",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Windows",
-    "description": "Software de mantenimiento (GMAO) para PYMEs: gestión de mantenimiento industrial, OTs, preventivos, inventario de insumos y equipos.",
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "USD"
-    }
-  }
-  </script>
 
   <style>
     :root{--bg:#0A192F;--panel:#0F1E3A;--panel-2:#112240;--text:#E6F1FF;--muted:#8892B0;--accent:#FFD700;--shadow:rgba(0,0,0,.5);--ring:rgba(255,215,0,.25)}
     *{box-sizing:border-box} html,body{margin:0;padding:0}
     body{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;line-height:1.6}
-    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
     header{background:var(--panel);border-bottom:1px solid #0e1a31;position:sticky;top:0;z-index:50}
     .wrap{max-width:1200px;margin:0 auto;padding:0 20px}
@@ -62,12 +25,13 @@
     .brand-title{font-weight:700;color:var(--text);font-size:1.1rem}
     nav a{color:var(--text);text-decoration:none;font-weight:600;margin-left:22px;padding:8px 10px;border-radius:8px;transition:.2s}
     nav a:hover{color:var(--accent);background:rgba(255,215,0,.08)}
+    nav a.active{color:var(--accent);background:rgba(255,215,0,.12)}
 
     .hero{background:linear-gradient(180deg,var(--panel) 0%,var(--panel-2) 100%);border-bottom:1px solid #0e1a31}
     .hero-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:40px;align-items:center;padding:64px 20px;max-width:1200px;margin:0 auto}
     .hero-kicker{color:var(--accent);font-weight:700;letter-spacing:.12em;font-size:.9rem;text-transform:uppercase}
     .hero h1{font-size:clamp(2.2rem,4vw,3.2rem);line-height:1.15;margin:.6rem 0 1rem}
-    .hero p{color:var(--muted);font-size:1.15rem;max-width:62ch}
+    .hero p{color:var(--muted);font-size:1.15rem;max-width:48ch}
     .cta{display:flex;gap:14px;flex-wrap:wrap;margin-top:24px}
     .btn{display:inline-block;font-weight:700;padding:12px 20px;border-radius:10px;border:2px solid transparent;text-decoration:none;transition:.25s;box-shadow:0 6px 18px -8px var(--shadow)}
     .btn-primary{background:var(--accent);color:#08142b}.btn-primary:hover{transform:translateY(-1px)}
@@ -79,7 +43,17 @@
     .slide{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 600ms ease}
     .slide img{width:100% !important;height:100% !important;max-height:none !important;object-fit:contain !important;border-radius:14px;display:block;background:#fff}
     .slide.active{opacity:1}
-    .nav-btn{position:absolute; top:50%; transform:translateY(-50%); width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,255,255,.35); background:rgba(8,20,43,.55); color:#fff; backdrop-filter: blur(6px); display:flex; align-items:center; justify-content:center; cursor:pointer; user-select:none; box-shadow:0 6px 18px -10px var(--shadow); transition:background .2s, transform .1s}
+
+    .nav-btn{
+      position:absolute; top:50%; transform:translateY(-50%);
+      width:42px; height:42px; border-radius:50%;
+      border:1px solid rgba(255,255,255,.35);
+      background:rgba(8,20,43,.55); color:#fff; backdrop-filter: blur(6px);
+      display:flex; align-items:center; justify-content:center;
+      cursor:pointer; user-select:none;
+      box-shadow:0 6px 18px -10px var(--shadow);
+      transition:background .2s, transform .1s;
+    }
     .nav-btn:hover{ background:rgba(8,20,43,.75) }
     .nav-btn:active{ transform:translateY(-50%) scale(.98) }
     .nav-prev{ left:8px }
@@ -106,45 +80,35 @@
         <img src="/splash.png" alt="ManteMoustache logo" />
         <span class="brand-title">ManteMoustache</span>
       </a>
-      <nav role="navigation" aria-label="Principal">
-        <a href="#funcionalidades">Funcionalidades</a>
+      <nav role="navigation" aria-label="Principal" id="mainNav">
         <a href="#about">Sobre Nosotros</a>
         <a href="#download">Descarga</a>
+        <a href="/tienda.html">Tienda</a>
         <a href="#contact">Contacto</a>
       </nav>
     </div>
   </header>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-grid">
       <div>
-        <div class="hero-kicker">Software de mantenimiento (GMAO)</div>
-        <h1>Software de mantenimiento para PYMEs industriales</h1>
-        <p>
-          ManteMoustache es un <strong>software de mantenimiento</strong> pensado para PYMEs que necesitan
-          profesionalizar su <strong>mantenimiento industrial</strong> sin complejidad. Centralizá la
-          <strong>gestión de mantenimiento</strong>: equipos y activos, OTs, preventivos y correctivos,
-          stock de insumos y herramientas, todo en un solo lugar.
-        </p>
-        <ul class="sr-only">
-          <li>Mantenimiento preventivo y correctivo</li>
-          <li>Órdenes de trabajo automáticas</li>
-          <li>Inventario de insumos y herramientas</li>
-        </ul>
+        <div class="hero-kicker">Software de mantenimiento</div>
+        <h1>Gestión de mantenimiento simple, rápido y profesional</h1>
+        <p>ManteMoustache es un software de mantenimiento industrial para PYMEs: gestión de equipos, insumos y herramientas; mantenimiento preventivo y correctivo; inventario de activos, programación de preventivos, generación automática de OTs y control de insumos, todo en un solo lugar.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="#funcionalidades">Ver funcionalidades</a>
+          <a class="btn btn-primary" href="#productos">Ver productos</a>
           <a class="btn btn-ghost" href="#about">Cómo funciona</a>
         </div>
       </div>
 
-      <!-- Mantengo tu cuadro/carrusel de imagen -->
-      <div class="hero-illu" aria-label="Galería ilustrativa">
+      <!-- Cuadro de imagen (se mantiene) -->
+      <div class="hero-illu">
         <div class="frame">
           <div class="slide-stack" id="heroStack">
-            <div class="slide active"><img alt="Panel de gestión de mantenimiento industrial" /></div>
-            <div class="slide"><img alt="Calendario de órdenes de trabajo y preventivos" /></div>
+            <div class="slide active"><img alt="Imagen industrial" /></div>
+            <div class="slide"><img alt="Imagen industrial" /></div>
 
+            <!-- Botones -->
             <button class="nav-btn nav-prev" id="prevBtn" aria-label="Imagen anterior" title="Anterior">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M15 18l-6-6 6-6"/>
@@ -158,84 +122,37 @@
           </div>
         </div>
       </div>
+      <!-- /cuadro de imagen -->
     </div>
   </section>
 
-  <!-- FUNCIONALIDADES / BENEFICIOS -->
-  <section id="funcionalidades" class="wrap">
-    <h2>Gestión de mantenimiento simple y profesional</h2>
-    <p class="section-sub">
-      Planificá y ejecutá <strong>mantenimiento preventivo</strong> y <strong>correctivo</strong>, generá <strong>órdenes de trabajo</strong> (OTs) automáticas,
-      controlá el inventario de <strong>insumos y herramientas</strong> y obtené trazabilidad completa por equipo.
-    </p>
-
-    <div class="cards" aria-label="Características de ManteMoustache">
-      <div class="card">
-        <h3>🛠️ Gestión de OTs</h3>
-        <p>Creación manual y automática, estados, responsables y fechas. Calendario de preventivos y reprogramaciones.</p>
-      </div>
-      <div class="card">
-        <h3>🏭 Equipos y activos</h3>
-        <p>Fichas técnicas, historial, criticidad y documentación. Trazabilidad por equipo y ubicación.</p>
-      </div>
-      <div class="card">
-        <h3>📦 Insumos y herramientas</h3>
-        <p>Stock en tiempo real, movimientos por OT y mínimos configurables para evitar quiebres.</p>
-      </div>
-      <div class="card">
-        <h3>📊 Indicadores de mantenimiento</h3>
-        <p>Cumplimiento de plan, incidencias y consumos. Decisiones con datos, menos paradas imprevistas.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SOBRE NOSOTROS -->
   <section id="about" class="wrap">
     <h2>Sobre Nosotros</h2>
-    <p class="section-sub">
-      Somos una empresa uruguaya enfocada en herramientas simples y robustas para <strong>mantenimiento industrial</strong>.
-      Liderado por Pablo Rivero (Tecnólogo Industrial Mecánico), combinamos experiencia de planta con software moderno.
-    </p>
+    <p class="section-sub">Empresa uruguaya enfocada en herramientas simples y robustas para mantenimiento industrial. Liderado por Pablo Rivero (Tecnólogo Industrial Mecánico), combinamos experiencia de planta con software moderno.</p>
 
+    <!-- Ancla exacta para "Ver productos" -->
     <div id="productos"></div>
 
     <div class="cards">
       <div class="card">
-        <h3>🧾 Listado de Equipos</h3>
-        <p>Registro, clasificación y seguimiento del estado, con trazabilidad técnica e imágenes por equipo.</p>
+        <h3>🛠️ Gestión de Equipos</h3>
+        <p>Inventario de activos, trazabilidad técnica e historial por equipo. Fotos, documentos y estado en tiempo real.</p>
       </div>
       <div class="card">
-        <h3>🗂️ Listado de Insumos</h3>
-        <p>Stock, movimientos y alertas de mínimos, integrado al flujo de OTs y responsables.</p>
+        <h3>📦 Gestión de Insumos</h3>
+        <p>Stock, movimientos y alertas de mínimos. Controlá consumos y reposiciones por área y responsable.</p>
+      </div>
+      <div class="card">
+        <h3>📅 Mantenimiento preventivo</h3>
+        <p>Planificación por calendario o contador, márgenes, umbrales y OTs automáticas.</p>
+      </div>
+      <div class="card">
+        <h3>⚙️ Mantenimiento correctivo</h3>
+        <p>Registro de fallas, priorización y seguimiento hasta el cierre con responsables y repuestos.</p>
       </div>
     </div>
   </section>
 
-  <!-- FAQ (contiene keywords de manera natural) -->
-  <section class="wrap" id="faq">
-    <h2>Preguntas frecuentes sobre software de mantenimiento</h2>
-    <p class="section-sub">Respuestas rápidas sobre nuestra GMAO y la gestión de mantenimiento.</p>
-    <div class="cards" role="list">
-      <div class="card" role="listitem">
-        <h3>¿Qué es un software de mantenimiento (GMAO)?</h3>
-        <p>Es una herramienta para organizar el <strong>mantenimiento industrial</strong>: planificar preventivos, registrar correctivos, gestionar OTs y controlar insumos/equipos.</p>
-      </div>
-      <div class="card" role="listitem">
-        <h3>¿Para quién es ManteMoustache?</h3>
-        <p>Para PYMEs con mantenimiento en planta, talleres y servicios técnicos que necesitan <strong>gestión de mantenimiento</strong> simple y trazable.</p>
-      </div>
-      <div class="card" role="listitem">
-        <h3>¿Qué beneficios obtengo?</h3>
-        <p>Más cumplimiento de preventivos, menos urgencias, control de stock y decisiones con datos. Todo centralizado en una sola plataforma.</p>
-      </div>
-      <div class="card" role="listitem">
-        <h3>¿Puedo empezar rápido?</h3>
-        <p>Sí. El enfoque es práctico: importás equipos e insumos y activás tu plan de mantenimiento con pocos pasos.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- DESCARGA / CTA -->
   <section id="download" class="download">
     <div class="wrap">
       <h2>Descarga</h2>
@@ -246,7 +163,6 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
   <footer id="contact">
     <div class="footer-inner">
       <p>Contacto: Pablo Rivero</p>
@@ -266,7 +182,7 @@
       });
     });
 
-    // ===== Carrusel con botones (intacto, solo mejoro alts y carga) =====
+    // ===== Carrusel con botones (manteniendo tu cuadro de imagen) =====
     const INTERVAL_MS = 5000;
     const stack  = document.getElementById('heroStack');
     const slides = stack.querySelectorAll('.slide');
@@ -314,7 +230,6 @@
       const target = useA ? imgB : imgA;
       const showSlide = useA ? 1 : 0;
       const hideSlide = useA ? 0 : 1;
-      target.loading = "eager"; // primera imagen visible
       target.src = url;
       slides[showSlide].classList.add('active');
       slides[hideSlide].classList.remove('active');
@@ -339,8 +254,6 @@
 
     (async function init(){
       imgA.src = "/fotos/01.jpg" + cb();
-      imgA.alt = "Vista de software de mantenimiento con indicadores";
-      imgB.alt = "Calendario y órdenes de trabajo del mantenimiento industrial";
       slides[0].classList.add('active');
 
       urls = await listByProbing();
@@ -356,7 +269,24 @@
 
       if(urls.length > 1) startAuto();
 
-      console.log(`[Carrusel] Detectadas ${urls.length}:`, urls);
+      // console.log(`[Carrusel] Detectadas ${urls.length}:`, urls);
+    })();
+
+    // ===== Menú: marcar enlace activo en index =====
+    (function(){
+      const nav = document.getElementById('mainNav');
+      if(!nav) return;
+      const links = [...nav.querySelectorAll('a')];
+
+      // Si estamos en /tienda.html, que no marque aquí
+      if (location.pathname.toLowerCase().includes('/tienda.html')) return;
+
+      const currentHash = location.hash || '#about';
+      links.forEach(a=>{
+        const href = a.getAttribute('href') || '';
+        const isActive = href.startsWith('#') ? (href === currentHash) : false;
+        a.classList.toggle('active', isActive);
+      });
     })();
   </script>
 </body>
